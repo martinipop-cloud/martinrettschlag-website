@@ -89,12 +89,12 @@ export const project = defineType({
     }),
     defineField({
       name: "previewAnimation",
-      title: "Vorschau-Animation",
+      title: "Vorschau-Video",
       description:
-        "Bewegte Kachel-Vorschau als GIF oder WebP. Richtwert: höchstens 1,5 MB, damit die Übersicht schnell lädt.",
+        "Kurzer, stummer Loop als MP4 oder WebM (3–10 Sekunden). Richtwert: unter 2 MB — ein MP4 in 1280 Pixel Breite reicht für die Kachel völlig aus. Bitte kein GIF mehr: dasselbe Video wird als GIF schnell fünfzigmal so groß.",
       type: "file",
       group: "media",
-      options: { accept: "image/gif,image/webp" },
+      options: { accept: "video/mp4,video/webm" },
       validation: (rule) => rule.required(),
     }),
     defineField({
