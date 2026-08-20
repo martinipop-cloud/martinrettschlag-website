@@ -49,6 +49,28 @@ export type ProjectOrderEntry = {
   slug: string;
 };
 
+/** Ein Tool im Software-Bereich. */
+export type ToolData = {
+  _id: string;
+  name: string;
+  slug: string;
+  shortDescription: string;
+  compatibility: string;
+  installation: PortableTextBlock[] | null;
+  demoVideo: string | null;
+  paypalUrl: string | null;
+  downloads: number | null;
+  screenshots: (SanityImage & {
+    dimensions?: { width: number; height: number } | null;
+  })[] | null;
+  datei: {
+    url: string;
+    originalFilename: string | null;
+    size: number | null;
+    extension: string | null;
+  } | null;
+};
+
 /** Artikel in der Blogübersicht. */
 export type PostCardData = {
   _id: string;

@@ -29,6 +29,14 @@ export const siteSettings = defineType({
       type: "richText",
       group: "texts",
     }),
+    defineField({
+      name: "thankYouText",
+      title: "Text auf der Dankesseite",
+      description:
+        "Erscheint unter /danke — dorthin leitet PayPal nach einer Spende weiter. Bleibt das Feld leer, wird ein Standardtext angezeigt.",
+      type: "richText",
+      group: "texts",
+    }),
 
     defineField({
       name: "contactEmail",

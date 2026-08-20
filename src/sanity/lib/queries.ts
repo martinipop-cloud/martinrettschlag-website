@@ -70,6 +70,26 @@ export const projectSlugsQuery = defineQuery(`
   *[_type == "project" && defined(slug.current)].slug.current
 `);
 
+/** Alle Tools für den Software-Bereich (Kapitel 4.4). */
+export const toolsQuery = defineQuery(`
+  *[_type == "tool"] | order(order asc, name asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    shortDescription,
+    compatibility,
+    installation,
+    demoVideo,
+    paypalUrl,
+    downloads,
+    screenshots[]{
+      ...,
+      "dimensions": asset->metadata.dimensions
+    },
+    "datei": downloadFile.asset->{url, originalFilename, size, extension}
+  }
+`);
+
 /** Artikelübersicht „What I Like“, neueste zuerst (F-501, F-502). */
 export const postsQuery = defineQuery(`
   *[_type == "post"] | order(publishedAt desc) {
@@ -117,6 +137,7 @@ export const siteSettingsQuery = defineQuery(`
   *[_type == "siteSettings"][0] {
     homeStatement,
     softwareIntro,
+    thankYouText,
     contactEmail,
     location,
     instagramUrl,
