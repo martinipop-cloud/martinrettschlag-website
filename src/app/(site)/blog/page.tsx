@@ -11,6 +11,14 @@ export const metadata: Metadata = {
   title: "What I Like",
   description:
     "Gedanken zu Tools, Techniken und Branche — von Martin Rettschlag.",
+  // Macht den Feed für Browser und Leseprogramme auffindbar.
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/blog/rss.xml", title: "Martin Rettschlag — What I Like" },
+      ],
+    },
+  },
 };
 
 export const revalidate = 60;
