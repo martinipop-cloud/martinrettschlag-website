@@ -70,6 +70,41 @@ export const projectSlugsQuery = defineQuery(`
   *[_type == "project" && defined(slug.current)].slug.current
 `);
 
+/** Artikelübersicht „What I Like“, neueste zuerst (F-501, F-502). */
+export const postsQuery = defineQuery(`
+  *[_type == "post"] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    coverImage
+  }
+`);
+
+/** Einzelner Blogartikel (F-503 bis F-506). */
+export const postBySlugQuery = defineQuery(`
+  *[_type == "post" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    coverImage,
+    body[]{
+      ...,
+      _type == "contentImage" => {
+        "dimensions": asset->metadata.dimensions
+      }
+    }
+  }
+`);
+
+/** Alle Artikel-Slugs, um die Detailseiten beim Bauen vorzuerzeugen. */
+export const postSlugsQuery = defineQuery(`
+  *[_type == "post" && defined(slug.current)].slug.current
+`);
+
 /** Impressum bzw. Datenschutzerklärung, ausgewählt über den Adressteil. */
 export const legalPageQuery = defineQuery(`
   *[_type == "legalPage" && slug.current == $slug][0] {

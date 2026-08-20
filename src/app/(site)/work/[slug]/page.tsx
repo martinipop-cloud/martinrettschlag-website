@@ -82,7 +82,9 @@ export default async function ProjectDetailPage({
   const galerie: GalleryImage[] = (
     (projekt.gallery ?? []) as GallerySource[]
   ).map((bild) => ({
-    url: urlFor(bild).width(1600).fit("max").auto("format").url(),
+    // Kleine Fassung fürs Raster, große erst beim Anklicken – spart Ladezeit.
+    thumbUrl: urlFor(bild).width(600).height(450).fit("crop").auto("format").url(),
+    fullUrl: urlFor(bild).width(2000).fit("max").auto("format").url(),
     alt: bild.alt ?? "",
     caption: bild.caption,
     width: bild.dimensions?.width ?? 1600,

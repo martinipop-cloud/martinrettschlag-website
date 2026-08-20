@@ -48,3 +48,18 @@ export type ProjectOrderEntry = {
   title: string;
   slug: string;
 };
+
+/** Artikel in der Blogübersicht. */
+export type PostCardData = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  publishedAt: string;
+  coverImage: SanityImage | null;
+};
+
+/** Vollständiger Blogartikel. */
+export type PostDetail = PostCardData & {
+  body: PortableTextBlock[] | null;
+};

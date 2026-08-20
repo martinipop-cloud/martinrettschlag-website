@@ -117,12 +117,14 @@ export const project = defineType({
     }),
     defineField({
       name: "gallery",
-      title: "Bildergalerie (Stills / Breakdowns)",
+      title: "Screenshots / Stills",
       description:
-        "Werden auf der Projektseite untereinander angezeigt. Reihenfolge per Ziehen änderbar.",
+        "Einzelbilder, Frames oder Breakdowns. Werden auf der Projektseite als Raster kleinerer Vorschaubilder gezeigt und lassen sich per Klick vergrößern. Sinnvoll sind 3 bis 10 Bilder; Reihenfolge per Ziehen änderbar.",
       type: "array",
       group: "media",
       of: [defineArrayMember({ type: "contentImage" })],
+      validation: (rule) =>
+        rule.max(10).warning("Mehr als 10 Bilder wirken schnell unübersichtlich."),
     }),
 
     defineField({
