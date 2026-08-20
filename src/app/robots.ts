@@ -7,6 +7,9 @@ import type { MetadataRoute } from "next";
  * Download-Zähler nicht verfälschen. Das Studio und die Schnittstellen
  * gehören ohnehin nicht in Suchergebnisse (B-02).
  */
+const basis =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.martinrettschlag.de";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
@@ -14,5 +17,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/studio", "/danke"],
     },
+    sitemap: `${basis}/sitemap.xml`,
   };
 }
