@@ -31,13 +31,9 @@ export function ToolCard({
   const videoId = getYouTubeId(tool.demoVideo);
   const screenshots = tool.screenshots ?? [];
 
-  // Sanity liefert die Datei mit "?dl=" als echten Download aus,
-  // statt sie im Browserfenster zu öffnen.
-  const downloadUrl = tool.datei
-    ? `${tool.datei.url}?dl=${encodeURIComponent(
-        tool.datei.originalFilename ?? tool.name,
-      )}`
-    : null;
+  // Der Download läuft über die eigene Adresse, damit er mitgezählt werden
+  // kann (F-410). Von dort geht es weiter zur Datei.
+  const downloadUrl = tool.datei ? `/api/download/${tool.slug}` : null;
 
   return (
     <article
@@ -53,6 +49,9 @@ export function ToolCard({
           <p className="meta">
             .{tool.datei.extension}
             {groesse && ` · ${groesse}`}
+            {typeof tool.downloads === "number" &&
+              tool.downloads > 0 &&
+              ` · ${tool.downloads.toLocaleString("de-DE")} Downloads`}
           </p>
         )}
       </div>
@@ -64,6 +63,9 @@ export function ToolCard({
         {downloadUrl && (
           <a
             href={downloadUrl}
+            // Suchmaschinen sollen dem Link nicht folgen, sonst zählen
+            // deren Roboter als Downloads mit.
+            rel="nofollow"
             className="meta rounded-full border border-accent bg-accent px-7 py-3 !text-accent-contrast transition-opacity hover:opacity-85"
           >
             Herunterladen
