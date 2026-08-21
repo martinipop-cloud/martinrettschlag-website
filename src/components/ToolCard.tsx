@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { DownloadButton } from "@/components/DownloadButton";
 import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
@@ -61,15 +62,11 @@ export function ToolCard({
       {/* Download frei zugänglich, Spende freiwillig daneben (F-404, F-405) */}
       <div className="mt-8 flex flex-wrap items-center gap-4">
         {downloadUrl && (
-          <a
-            href={downloadUrl}
-            // Suchmaschinen sollen dem Link nicht folgen, sonst zählen
-            // deren Roboter als Downloads mit.
-            rel="nofollow"
-            className="meta rounded-full border border-accent bg-accent px-7 py-3 !text-accent-contrast transition-opacity hover:opacity-85"
-          >
-            Herunterladen
-          </a>
+          <DownloadButton
+            downloadUrl={downloadUrl}
+            toolName={tool.name}
+            paypalUrl={spendenLink}
+          />
         )}
 
         {spendenLink && (
