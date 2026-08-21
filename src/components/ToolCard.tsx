@@ -83,8 +83,7 @@ export function ToolCard({
       </div>
 
       <p className="meta mt-4 max-w-lg leading-relaxed">
-        Wenn dir das Tool hilft, freue ich mich über eine Spende — sie ist
-        freiwillig und keine Bedingung.
+        Wenn dir das Tool hilft, freue ich mich über eine Spende.
       </p>
 
       {videoId && (

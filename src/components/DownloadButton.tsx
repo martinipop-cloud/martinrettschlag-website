@@ -83,8 +83,7 @@ export function DownloadButton({
             </h2>
 
             <p className="mt-6 leading-relaxed">
-              <strong>{toolName}</strong> wird gerade geladen — kostenlos, ohne
-              Haken.
+              <strong>{toolName}</strong> wird gerade geladen.
             </p>
 
             <p className="mt-4 leading-relaxed text-muted">
