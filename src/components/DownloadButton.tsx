@@ -83,15 +83,14 @@ export function DownloadButton({
             </h2>
 
             <p className="mt-6 leading-relaxed">
-              <strong>{toolName}</strong> wird gerade geladen — kostenlos und
-              ohne Gegenleistung.
+              <strong>{toolName}</strong> wird gerade geladen — kostenlos, ohne
+              Haken.
             </p>
 
             <p className="mt-4 leading-relaxed text-muted">
-              Diese Tools entstehen in meiner freien Zeit. Wenn dir eins die
-              Arbeit erleichtert, freue ich mich über eine Spende. Sie ist
-              freiwillig und ändert nichts daran, dass alles frei verfügbar
-              bleibt.
+              Wenn du willst, dass noch mehr solcher Tools entstehen: Genau
+              dafür sind Spenden da. Sie kaufen mir die Zeit frei, neue zu
+              bauen.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
