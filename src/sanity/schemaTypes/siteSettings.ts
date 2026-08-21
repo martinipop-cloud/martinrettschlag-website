@@ -23,6 +23,30 @@ export const siteSettings = defineType({
       group: "texts",
     }),
     defineField({
+      name: "bio",
+      title: "Kurzbiografie (Startseite)",
+      description:
+        "Erscheint auf der Startseite unter dem Statement. Wer du bist, was du machst, womit du arbeitest — zwei bis fünf Sätze reichen. Bleibt das Feld leer, wird der Abschnitt gar nicht angezeigt.",
+      type: "richText",
+      group: "texts",
+    }),
+    defineField({
+      name: "portrait",
+      title: "Portraitfoto (optional)",
+      description:
+        "Wird neben der Kurzbiografie angezeigt. Ohne Bild rückt der Text über die volle Breite.",
+      type: "image",
+      group: "texts",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alternativtext",
+          type: "string",
+        }),
+      ],
+    }),
+    defineField({
       name: "softwareIntro",
       title: "Einleitung Software-Bereich",
       description: "Kurzer Text über der Liste der Tools.",

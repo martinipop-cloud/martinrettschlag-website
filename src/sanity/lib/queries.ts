@@ -136,6 +136,8 @@ export const legalPageQuery = defineQuery(`
 export const siteSettingsQuery = defineQuery(`
   *[_type == "siteSettings"][0] {
     homeStatement,
+    bio,
+    portrait,
     softwareIntro,
     thankYouText,
     contactEmail,
