@@ -49,7 +49,13 @@ export const projectBySlugQuery = defineQuery(`
     previewStill,
     gallery[]{
       ...,
-      "dimensions": asset->metadata.dimensions
+      _type == "contentImage" => {
+        "dimensions": asset->metadata.dimensions
+      },
+      _type == "galleryVideo" => {
+        "videoUrl": video.asset->url,
+        "mimeType": video.asset->mimeType
+      }
     },
     "category": category->{name, "slug": slug.current}
   }

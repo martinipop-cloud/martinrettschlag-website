@@ -117,14 +117,17 @@ export const project = defineType({
     }),
     defineField({
       name: "gallery",
-      title: "Screenshots / Stills",
+      title: "Screenshots & Clips",
       description:
-        "Einzelbilder, Frames oder Breakdowns. Werden auf der Projektseite als Raster kleinerer Vorschaubilder gezeigt und lassen sich per Klick vergrößern. Sinnvoll sind 3 bis 10 Bilder; Reihenfolge per Ziehen änderbar.",
+        "Standbilder und kurze Clips gemischt — beides erscheint im selben Raster und lässt sich per Klick vergrößern. Beim Hinzufügen wählst du zwischen „Bild“ und „Clip“. Sinnvoll sind 3 bis 10 Einträge; Reihenfolge per Ziehen änderbar.",
       type: "array",
       group: "media",
-      of: [defineArrayMember({ type: "contentImage" })],
+      of: [
+        defineArrayMember({ type: "contentImage", title: "Bild" }),
+        defineArrayMember({ type: "galleryVideo", title: "Clip" }),
+      ],
       validation: (rule) =>
-        rule.max(10).warning("Mehr als 10 Bilder wirken schnell unübersichtlich."),
+        rule.max(10).warning("Mehr als 10 Einträge wirken schnell unübersichtlich."),
     }),
 
     defineField({

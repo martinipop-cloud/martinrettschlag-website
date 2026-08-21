@@ -103,6 +103,50 @@ export const contentImage = defineType({
 });
 
 /**
+ * Kurzer, stummer Clip innerhalb der Projektgalerie.
+ *
+ * Sieht im Raster genauso aus wie ein Screenshot, bewegt sich aber. Gedacht
+ * für Ausschnitte, bei denen ein Standbild die Arbeit nicht zeigen kann.
+ */
+export const galleryVideo = defineType({
+  name: "galleryVideo",
+  title: "Clip",
+  type: "object",
+  fields: [
+    defineField({
+      name: "video",
+      title: "Videodatei",
+      description:
+        "Kurzer, stummer Loop als MP4 oder WebM (3–10 Sekunden). Richtwert: unter 2 MB, 1280 Pixel Breite reichen für die Kachel.",
+      type: "file",
+      options: { accept: "video/mp4,video/webm" },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "alt",
+      title: "Alternativtext",
+      description:
+        "Beschreibt, was im Clip zu sehen ist. Für Screenreader und Suchmaschinen.",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "caption",
+      title: "Bildunterschrift",
+      description: "Wird unter dem Clip angezeigt. Optional.",
+      type: "string",
+    }),
+  ],
+  preview: {
+    select: { title: "alt", subtitle: "caption" },
+    prepare: ({ title, subtitle }) => ({
+      title: title || "Clip",
+      subtitle: subtitle ?? "Clip",
+    }),
+  },
+});
+
+/**
  * Voller Artikeltext für den Blog: Fließtext plus Bilder, Videos und Codeblöcke.
  */
 export const blogBody = defineType({

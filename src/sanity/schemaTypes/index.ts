@@ -1,6 +1,12 @@
 import type { SchemaTypeDefinition } from "sanity";
 
-import { blogBody, contentImage, richText, youtubeEmbed } from "./blocks";
+import {
+  blogBody,
+  contentImage,
+  galleryVideo,
+  richText,
+  youtubeEmbed,
+} from "./blocks";
 import { category } from "./category";
 import { inquiry } from "./inquiry";
 import { legalPage } from "./legalPage";
@@ -15,6 +21,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     richText,
     blogBody,
     contentImage,
+    galleryVideo,
     youtubeEmbed,
     // Inhalte
     project,

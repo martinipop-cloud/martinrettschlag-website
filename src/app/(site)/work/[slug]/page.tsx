@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Gallery, type GalleryImage } from "@/components/Gallery";
+import { Gallery, type GalleryItem } from "@/components/Gallery";
 import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
@@ -21,8 +21,12 @@ import type {
 
 export const revalidate = 60;
 
+/** Ein Eintrag der Projektgalerie – entweder ein Bild oder ein Clip. */
 type GallerySource = SanityImage & {
+  _type: string;
   dimensions?: { width: number; height: number } | null;
+  videoUrl?: string | null;
+  mimeType?: string | null;
 };
 
 /** Erzeugt die Projektseiten beim Bauen vor, damit sie sofort ausgeliefert werden. */
@@ -79,17 +83,36 @@ export default async function ProjectDetailPage({
     ? urlFor(projekt.previewStill).width(1600).fit("max").auto("format").url()
     : null;
 
-  const galerie: GalleryImage[] = (
-    (projekt.gallery ?? []) as GallerySource[]
-  ).map((bild) => ({
-    // Kleine Fassung fürs Raster, große erst beim Anklicken – spart Ladezeit.
-    thumbUrl: urlFor(bild).width(600).height(450).fit("crop").auto("format").url(),
-    fullUrl: urlFor(bild).width(2000).fit("max").auto("format").url(),
-    alt: bild.alt ?? "",
-    caption: bild.caption,
-    width: bild.dimensions?.width ?? 1600,
-    height: bild.dimensions?.height ?? 1200,
-  }));
+  const galerie: GalleryItem[] = ((projekt.gallery ?? []) as GallerySource[])
+    .map((eintrag): GalleryItem | null => {
+      if (eintrag._type === "galleryVideo") {
+        if (!eintrag.videoUrl) return null;
+        return {
+          art: "clip",
+          url: eintrag.videoUrl,
+          mimeType: eintrag.mimeType ?? "video/mp4",
+          alt: eintrag.alt ?? "",
+          caption: eintrag.caption,
+        };
+      }
+
+      return {
+        art: "bild",
+        // Kleine Fassung fürs Raster, große erst beim Anklicken – spart Ladezeit.
+        thumbUrl: urlFor(eintrag)
+          .width(600)
+          .height(450)
+          .fit("crop")
+          .auto("format")
+          .url(),
+        fullUrl: urlFor(eintrag).width(2000).fit("max").auto("format").url(),
+        alt: eintrag.alt ?? "",
+        caption: eintrag.caption,
+        width: eintrag.dimensions?.width ?? 1600,
+        height: eintrag.dimensions?.height ?? 1200,
+      };
+    })
+    .filter((eintrag): eintrag is GalleryItem => eintrag !== null);
 
   // Vorheriges und nächstes Projekt für die Navigation am Seitenende (F-307).
   const position = reihenfolge.findIndex((e) => e.slug === projekt.slug);
@@ -158,7 +181,7 @@ export default async function ProjectDetailPage({
         </div>
       )}
 
-      <Gallery images={galerie} />
+      <Gallery items={galerie} />
 
       {(vorheriges || naechstes) && (
         <nav
