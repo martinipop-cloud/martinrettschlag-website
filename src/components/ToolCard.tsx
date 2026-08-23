@@ -27,8 +27,16 @@ export function ToolCard({
   tool: ToolData;
   standardPaypalLink: string | null;
 }) {
+  const istKauf = tool.vertrieb === "kauf";
   const spendenLink = tool.paypalUrl ?? standardPaypalLink;
   const groesse = dateigroesse(tool.datei?.size ?? null);
+  const preis =
+    typeof tool.preis === "number"
+      ? tool.preis.toLocaleString("de-DE", {
+          style: "currency",
+          currency: "EUR",
+        })
+      : null;
   const videoId = getYouTubeId(tool.demoVideo);
   const screenshots = tool.screenshots ?? [];
 
@@ -46,45 +54,77 @@ export function ToolCard({
           <h2 className="display text-3xl md:text-4xl">{tool.name}</h2>
           <p className="meta mt-2">{tool.compatibility}</p>
         </div>
-        {tool.datei?.extension && (
-          <p className="meta">
-            .{tool.datei.extension}
-            {groesse && ` · ${groesse}`}
-            {typeof tool.downloads === "number" &&
-              tool.downloads > 0 &&
-              ` · ${tool.downloads.toLocaleString("de-DE")} Downloads`}
-          </p>
-        )}
+        {istKauf
+          ? preis && (
+              <p className="display text-2xl whitespace-nowrap">{preis}</p>
+            )
+          : tool.datei?.extension && (
+              <p className="meta">
+                .{tool.datei.extension}
+                {groesse && ` · ${groesse}`}
+                {typeof tool.downloads === "number" &&
+                  tool.downloads > 0 &&
+                  ` · ${tool.downloads.toLocaleString("de-DE")} Downloads`}
+              </p>
+            )}
       </div>
 
       <p className="mt-6 max-w-2xl leading-relaxed">{tool.shortDescription}</p>
 
-      {/* Download frei zugänglich, Spende freiwillig daneben (F-404, F-405) */}
-      <div className="mt-8 flex flex-wrap items-center gap-4">
-        {downloadUrl && (
-          <DownloadButton
-            downloadUrl={downloadUrl}
-            toolName={tool.name}
-            paypalUrl={spendenLink}
-          />
-        )}
+      {istKauf ? (
+        /* Kostenpflichtig: Kauf läuft über die Verkaufsplattform. Dort werden
+           Zahlung, Rechnung, Umsatzsteuer und Auslieferung abgewickelt. */
+        <>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            {tool.kaufUrl && (
+              <a
+                href={tool.kaufUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="meta rounded-full border border-accent bg-accent px-7 py-3 !text-accent-contrast transition-opacity hover:opacity-85"
+              >
+                Kaufen {preis && `— ${preis}`}
+                <span className="sr-only"> (öffnet in neuem Tab)</span>
+              </a>
+            )}
+          </div>
 
-        {spendenLink && (
-          <a
-            href={spendenLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="meta rounded-full border border-line px-7 py-3 transition-colors hover:border-accent hover:text-accent"
-          >
-            Spenden über PayPal
-            <span className="sr-only"> (öffnet in neuem Tab)</span>
-          </a>
-        )}
-      </div>
+          <p className="meta mt-4 max-w-lg leading-relaxed">
+            Preis inklusive Mehrwertsteuer. Kauf und Auslieferung laufen über
+            unseren Verkaufspartner, dort siehst du den Endbetrag für dein Land.
+          </p>
+        </>
+      ) : (
+        /* Kostenlos: Download frei zugänglich, Spende freiwillig daneben
+           (F-404, F-405) */
+        <>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            {downloadUrl && (
+              <DownloadButton
+                downloadUrl={downloadUrl}
+                toolName={tool.name}
+                paypalUrl={spendenLink}
+              />
+            )}
 
-      <p className="meta mt-4 max-w-lg leading-relaxed">
-        Wenn dir das Tool hilft, freue ich mich über eine Spende.
-      </p>
+            {spendenLink && (
+              <a
+                href={spendenLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="meta rounded-full border border-line px-7 py-3 transition-colors hover:border-accent hover:text-accent"
+              >
+                Spenden über PayPal
+                <span className="sr-only"> (öffnet in neuem Tab)</span>
+              </a>
+            )}
+          </div>
+
+          <p className="meta mt-4 max-w-lg leading-relaxed">
+            Wenn dir das Tool hilft, freue ich mich über eine Spende.
+          </p>
+        </>
+      )}
 
       {videoId && (
         <div className="mt-10 max-w-3xl">

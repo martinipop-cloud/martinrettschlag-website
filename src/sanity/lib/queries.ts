@@ -86,6 +86,9 @@ export const toolsQuery = defineQuery(`
     compatibility,
     installation,
     demoVideo,
+    vertrieb,
+    preis,
+    kaufUrl,
     paypalUrl,
     downloads,
     screenshots[]{

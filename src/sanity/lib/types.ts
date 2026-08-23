@@ -58,6 +58,10 @@ export type ToolData = {
   compatibility: string;
   installation: PortableTextBlock[] | null;
   demoVideo: string | null;
+  /** "kostenlos" = freier Download mit Spendenhinweis, "kauf" = Verkauf über Plattform. */
+  vertrieb: "kostenlos" | "kauf" | null;
+  preis: number | null;
+  kaufUrl: string | null;
   paypalUrl: string | null;
   downloads: number | null;
   screenshots: (SanityImage & {
