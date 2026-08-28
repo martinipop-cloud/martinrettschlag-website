@@ -133,18 +133,32 @@ export default async function ProjectDetailPage({
       </h1>
 
       <div className="mt-12">
-        {videoId ? (
+        {projekt.medium === "loop" && projekt.loop ? (
+          /* Eigener Loop: läuft sofort, stumm und in Schleife. Kein Klick
+             nötig, weil die Datei vom eigenen Speicher kommt und keine
+             Verbindung zu Dritten entsteht. */
+          <video
+            className="w-full bg-paper-raised ring-1 ring-line"
+            poster={poster ?? undefined}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label={`${projekt.title} — Videoschleife`}
+          >
+            <source src={projekt.loop.url} type={projekt.loop.mimeType ?? "video/mp4"} />
+          </video>
+        ) : videoId ? (
           <YouTubeEmbed
             videoId={videoId}
             title={projekt.title}
             posterUrl={poster}
           />
         ) : (
-          projekt.youtubeUrl && (
-            <p className="meta">
-              Die hinterlegte Video-Adresse konnte nicht gelesen werden.
-            </p>
-          )
+          <p className="meta">
+            Für dieses Projekt ist noch kein Video hinterlegt.
+          </p>
         )}
       </div>
 

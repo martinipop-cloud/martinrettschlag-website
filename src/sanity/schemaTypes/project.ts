@@ -80,12 +80,57 @@ export const project = defineType({
     }),
 
     defineField({
+      name: "medium",
+      title: "Hauptvideo",
+      description:
+        "Bestimmt, wie das große Video oben auf der Projektseite gezeigt wird. Kurze, stumme Loops laufen als eigenes Video sofort und ohne Klick. Für längere Filme mit Ton ist YouTube die bessere Wahl.",
+      type: "string",
+      group: "media",
+      options: {
+        list: [
+          { title: "YouTube — für längere Filme, mit Ton", value: "youtube" },
+          { title: "Eigener Loop — läuft sofort, stumm, in Schleife", value: "loop" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "youtube",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "youtubeUrl",
       title: "YouTube-Adresse (URL)",
       description: "Link zum Video, das auf der Projektseite eingebettet wird.",
       type: "url",
       group: "media",
-      validation: (rule) => rule.required(),
+      hidden: ({ document }) => document?.medium === "loop",
+      validation: (rule) =>
+        rule.custom((wert, kontext) => {
+          const medium = (kontext.document as { medium?: string } | undefined)
+            ?.medium;
+          if (medium !== "loop" && !wert) {
+            return "Für ein YouTube-Video wird die Adresse benötigt.";
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: "loopVideo",
+      title: "Loop-Video",
+      description:
+        "Stummer Loop als MP4 oder WebM. Läuft oben auf der Projektseite automatisch in Endlosschleife. Richtwert: unter 10 MB — hier darf es etwas größer sein als bei den Kacheln, weil es groß dargestellt wird.",
+      type: "file",
+      group: "media",
+      options: { accept: "video/mp4,video/webm" },
+      hidden: ({ document }) => document?.medium !== "loop",
+      validation: (rule) =>
+        rule.custom((wert, kontext) => {
+          const medium = (kontext.document as { medium?: string } | undefined)
+            ?.medium;
+          if (medium === "loop" && !wert) {
+            return "Für einen eigenen Loop wird eine Videodatei benötigt.";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "previewAnimation",

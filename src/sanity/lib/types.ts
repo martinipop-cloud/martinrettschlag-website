@@ -38,7 +38,10 @@ export type ProjectDetail = {
   client: string;
   roles: string[] | null;
   description: PortableTextBlock[] | null;
+  /** "youtube" = eingebettetes YouTube-Video, "loop" = eigenes Loop-Video. */
+  medium: "youtube" | "loop" | null;
   youtubeUrl: string | null;
+  loop: { url: string; mimeType: string | null } | null;
   previewStill: SanityImage | null;
   gallery: SanityImage[] | null;
   category: Pick<Category, "name" | "slug"> | null;

@@ -45,7 +45,9 @@ export const projectBySlugQuery = defineQuery(`
     client,
     roles,
     description,
+    medium,
     youtubeUrl,
+    "loop": loopVideo.asset->{url, mimeType},
     previewStill,
     gallery[]{
       ...,
