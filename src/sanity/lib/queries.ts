@@ -22,9 +22,13 @@ export const projectsQuery = defineQuery(`
   }
 `);
 
-/** Kuratierte Auswahl für die Startseite (F-102, F-103). */
+/**
+ * Kuratierte Auswahl für die Startseite (F-102, F-103).
+ * Ohne feste Obergrenze — wie viele erscheinen, steuerst du allein über das
+ * Häkchen „Auf Startseite zeigen“ im CMS.
+ */
 export const featuredProjectsQuery = defineQuery(`
-  *[_type == "project" && featured == true] | order(order asc, title asc)[0...6] {
+  *[_type == "project" && featured == true] | order(order asc, title asc) {
     ${cardFields}
   }
 `);
