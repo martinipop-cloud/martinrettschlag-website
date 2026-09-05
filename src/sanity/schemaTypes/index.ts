@@ -8,7 +8,6 @@ import {
   youtubeEmbed,
 } from "./blocks";
 import { category } from "./category";
-import { inquiry } from "./inquiry";
 import { legalPage } from "./legalPage";
 import { post } from "./post";
 import { project } from "./project";
@@ -28,7 +27,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     category,
     tool,
     post,
-    inquiry,
     legalPage,
     siteSettings,
   ],

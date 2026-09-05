@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import { anfrageVersenden, mailVersandEingerichtet } from "@/lib/mailer";
 import { aufraeumen, pruefeRatenbegrenzung } from "@/lib/rateLimit";
-import { hatSchreibrechte, writeClient } from "@/sanity/lib/writeClient";
 
 export const runtime = "nodejs";
 
@@ -27,6 +26,15 @@ function istEmail(wert: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(wert);
 }
 
+/**
+ * Nimmt Kontaktanfragen entgegen und stellt sie per E-Mail zu (F-604).
+ *
+ * Bewusst ohne Speicherung im CMS: Der Sanity-Datensatz ist öffentlich
+ * lesbar, gespeicherte Anfragen wären damit für jeden abrufbar. Das Postfach
+ * ist das Archiv. Schlägt der Versand fehl, erfährt der Absender das sofort
+ * und bekommt die direkte Adresse genannt — es geht also nichts stillschweigend
+ * verloren.
+ */
 export async function POST(request: Request) {
   let daten: Eingang;
   try {
@@ -88,42 +96,21 @@ export async function POST(request: Request) {
     );
   }
 
-  const anfrage = { name, email, subject, message };
-  let gespeichert = false;
-
-  // 1. Im CMS ablegen, damit keine Anfrage verloren geht (F-605).
-  if (hatSchreibrechte()) {
-    try {
-      await writeClient.create({
-        _type: "inquiry",
-        ...anfrage,
-        receivedAt: new Date().toISOString(),
-        handled: false,
-      });
-      gespeichert = true;
-    } catch (fehler) {
-      console.error("Anfrage konnte nicht im CMS gespeichert werden:", fehler);
-    }
-  } else {
-    console.warn("SANITY_API_WRITE_TOKEN fehlt – Anfrage wird nicht gespeichert.");
+  if (!mailVersandEingerichtet()) {
+    console.error("SMTP-Zugangsdaten fehlen – Anfrage konnte nicht zugestellt werden.");
+    return NextResponse.json(
+      {
+        fehler:
+          "Die Anfrage konnte gerade nicht übermittelt werden. Bitte schreib direkt an hello@martinrettschlag.de.",
+      },
+      { status: 500 },
+    );
   }
 
-  // 2. Per E-Mail zustellen (F-604).
-  let versendet = false;
-  if (mailVersandEingerichtet()) {
-    try {
-      await anfrageVersenden(anfrage);
-      versendet = true;
-    } catch (fehler) {
-      console.error("Anfrage konnte nicht versendet werden:", fehler);
-    }
-  } else {
-    console.warn("SMTP-Zugangsdaten fehlen – es wird keine E-Mail versendet.");
-  }
-
-  // Solange mindestens einer der beiden Wege geklappt hat, ist die Anfrage
-  // sicher angekommen und wir bestätigen dem Absender.
-  if (!gespeichert && !versendet) {
+  try {
+    await anfrageVersenden({ name, email, subject, message });
+  } catch (fehler) {
+    console.error("Anfrage konnte nicht versendet werden:", fehler);
     return NextResponse.json(
       {
         fehler:
