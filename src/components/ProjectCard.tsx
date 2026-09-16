@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ProjectCardData } from "@/sanity/lib/types";
 
 /**
@@ -16,7 +16,7 @@ import type { ProjectCardData } from "@/sanity/lib/types";
  * solange noch welche in der Datenbank liegen.
  */
 export function ProjectCard({ project }: { project: ProjectCardData }) {
-  const still = project.previewStill
+  const still = hatBild(project.previewStill)
     ? urlFor(project.previewStill).width(900).fit("max").auto("format").url()
     : null;
   const preview = project.preview;

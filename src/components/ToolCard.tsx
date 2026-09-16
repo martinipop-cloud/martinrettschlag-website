@@ -4,7 +4,7 @@ import { DownloadButton } from "@/components/DownloadButton";
 import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ToolData } from "@/sanity/lib/types";
 
 /** Wandelt Bytes in eine lesbare Angabe um. */
@@ -38,7 +38,8 @@ export function ToolCard({
         })
       : null;
   const videoId = getYouTubeId(tool.demoVideo);
-  const screenshots = tool.screenshots ?? [];
+  // Bildfelder ohne hochgeladene Datei aussortieren, statt abzustürzen.
+  const screenshots = (tool.screenshots ?? []).filter(hatBild);
 
   // Der Download läuft über die eigene Adresse, damit er mitgezählt werden
   // kann (F-410). Von dort geht es weiter zur Datei.

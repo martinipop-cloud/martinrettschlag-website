@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import { postsQuery } from "@/sanity/lib/queries";
 import type { PostCardData } from "@/sanity/lib/types";
 
@@ -55,7 +55,7 @@ export default async function BlogPage() {
             <li key={beitrag._id}>
               <article>
                 <Link href={`/blog/${beitrag.slug}`} className="group block">
-                  {beitrag.coverImage && (
+                  {hatBild(beitrag.coverImage) && (
                     <div className="relative aspect-[3/2] w-full overflow-hidden bg-paper-raised ring-1 ring-line">
                       <Image
                         src={urlFor(beitrag.coverImage)

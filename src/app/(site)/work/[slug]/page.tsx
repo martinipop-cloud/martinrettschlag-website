@@ -7,7 +7,7 @@ import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import {
   projectBySlugQuery,
   projectOrderQuery,
@@ -57,7 +57,7 @@ export async function generateMetadata({
     openGraph: {
       title: projekt.title,
       description: beschreibung || undefined,
-      images: projekt.previewStill
+      images: hatBild(projekt.previewStill)
         ? [urlFor(projekt.previewStill).width(1200).height(630).fit("crop").url()]
         : undefined,
     },
@@ -79,7 +79,7 @@ export default async function ProjectDetailPage({
   if (!projekt) notFound();
 
   const videoId = getYouTubeId(projekt.youtubeUrl);
-  const poster = projekt.previewStill
+  const poster = hatBild(projekt.previewStill)
     ? urlFor(projekt.previewStill).width(1600).fit("max").auto("format").url()
     : null;
 
@@ -95,6 +95,9 @@ export default async function ProjectDetailPage({
           caption: eintrag.caption,
         };
       }
+
+      // Bildfelder ohne hochgeladene Datei überspringen, statt abzustürzen.
+      if (!hatBild(eintrag)) return null;
 
       return {
         art: "bild",

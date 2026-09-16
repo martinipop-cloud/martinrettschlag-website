@@ -7,7 +7,7 @@ import Image from "next/image";
 
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 
 /**
  * Darstellung eines Blogartikels (F-503 bis F-506).
@@ -66,6 +66,8 @@ const components: PortableTextComponents = {
   },
   types: {
     contentImage: ({ value }) => {
+      // Bildfeld ohne hochgeladene Datei überspringen.
+      if (!hatBild(value)) return null;
       const masse = value?.dimensions ?? { width: 1600, height: 1067 };
       return (
         <figure className="my-10">

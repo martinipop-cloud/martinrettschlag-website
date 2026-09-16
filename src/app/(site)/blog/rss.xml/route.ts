@@ -1,6 +1,6 @@
 import { siteUrl } from "@/lib/site";
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import { postsQuery } from "@/sanity/lib/queries";
 import type { PostCardData } from "@/sanity/lib/types";
 
@@ -31,7 +31,7 @@ export async function GET() {
   const eintraege = artikel
     .map((beitrag) => {
       const adresse = `${siteUrl}/blog/${beitrag.slug}`;
-      const bild = beitrag.coverImage
+      const bild = hatBild(beitrag.coverImage)
         ? urlFor(beitrag.coverImage).width(1200).fit("max").auto("format").url()
         : null;
 

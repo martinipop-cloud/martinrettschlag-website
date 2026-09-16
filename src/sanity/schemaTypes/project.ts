@@ -158,7 +158,13 @@ export const project = defineType({
           validation: (rule) => rule.required(),
         }),
       ],
-      validation: (rule) => rule.required(),
+      // Prüft auf die Datei selbst, nicht nur auf das Feld: Ein Bildfeld, in
+      // das nur ein Alternativtext eingetragen wurde, gilt sonst als ausgefüllt.
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const asset = (wert as { asset?: unknown } | undefined)?.asset;
+          return asset ? true : "Bitte ein Bild hochladen.";
+        }),
     }),
     defineField({
       name: "gallery",

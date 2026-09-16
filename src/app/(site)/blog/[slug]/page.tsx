@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 
 import { BlogBody, lesedauerMinuten } from "@/components/BlogBody";
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import { postBySlugQuery, postSlugsQuery } from "@/sanity/lib/queries";
 import type { PostDetail } from "@/sanity/lib/types";
 
@@ -36,7 +36,7 @@ export async function generateMetadata({
       description: beitrag.excerpt,
       type: "article",
       publishedTime: beitrag.publishedAt,
-      images: beitrag.coverImage
+      images: hatBild(beitrag.coverImage)
         ? [urlFor(beitrag.coverImage).width(1200).height(630).fit("crop").url()]
         : undefined,
     },
@@ -75,7 +75,7 @@ export default async function BlogPostPage({
         {beitrag.title}
       </h1>
 
-      {beitrag.coverImage && (
+      {hatBild(beitrag.coverImage) && (
         <Image
           src={urlFor(beitrag.coverImage)
             .width(1600)

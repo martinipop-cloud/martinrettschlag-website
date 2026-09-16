@@ -5,7 +5,7 @@ import { HomeStatement } from "@/components/HomeStatement";
 import { ProjectCard } from "@/components/ProjectCard";
 import { RichText } from "@/components/RichText";
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { hatBild, urlFor } from "@/sanity/lib/image";
 import { featuredProjectsQuery, siteSettingsQuery } from "@/sanity/lib/queries";
 import type { ProjectCardData, SanityImage } from "@/sanity/lib/types";
 import type { PortableTextBlock } from "@portabletext/react";
@@ -63,7 +63,7 @@ export default async function HomePage() {
                   : ""
               }`}
             >
-              {einstellungen.portrait && (
+              {hatBild(einstellungen.portrait) && (
                 <Image
                   src={urlFor(einstellungen.portrait)
                     .width(560)
