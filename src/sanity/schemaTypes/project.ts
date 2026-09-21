@@ -134,19 +134,18 @@ export const project = defineType({
     }),
     defineField({
       name: "previewAnimation",
-      title: "Vorschau-Video",
+      title: "Vorschau-Video (optional)",
       description:
-        "Kurzer, stummer Loop als MP4 oder WebM (3–10 Sekunden). Richtwert: unter 2 MB — ein MP4 in 1280 Pixel Breite reicht für die Kachel völlig aus. Bitte kein GIF mehr: dasselbe Video wird als GIF schnell fünfzigmal so groß.",
+        "Kurzer, stummer Loop als MP4 oder WebM (3–10 Sekunden), der in der Kachel läuft. Ohne Video zeigt die Kachel das Vorschau-Standbild. Richtwert: unter 2 MB — ein MP4 in 1280 Pixel Breite reicht völlig aus. Bitte kein GIF: dasselbe Video wird als GIF schnell fünfzigmal so groß.",
       type: "file",
       group: "media",
       options: { accept: "video/mp4,video/webm" },
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "previewStill",
       title: "Vorschau-Standbild",
       description:
-        "Wird verwendet, solange die Animation lädt, bei der Einstellung „Bewegung reduzieren“ und beim Teilen in sozialen Netzwerken.",
+        "Pflichtfeld. Das Bild der Kachel in den Übersichten, wenn kein Vorschau-Video hinterlegt ist. Mit Video dient es als Platzhalter, solange das Video lädt. Außerdem erscheint es beim Teilen in sozialen Netzwerken.",
       type: "image",
       group: "media",
       options: { hotspot: true },
