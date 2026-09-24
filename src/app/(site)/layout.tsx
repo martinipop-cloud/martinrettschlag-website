@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/next";
 
+import { CustomCursor } from "@/components/CustomCursor";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -17,6 +18,7 @@ export default function SiteLayout({
       {/* Abstand nach oben, weil der Header fixiert ist und sonst Inhalt verdeckt. */}
       <main className="flex-1 pt-16">{children}</main>
       <SiteFooter />
+      <CustomCursor />
 
       {/* Cookiefreie Besucherzählung. Speichert nichts auf dem Gerät der
           Besucher und kommt daher ohne Einwilligungsbanner aus. Sendet nur,
