@@ -185,16 +185,23 @@ export default async function ProjectDetailPage({
             <dd className="mt-2 text-lg">{projekt.roles.join(", ")}</dd>
           </div>
         )}
-        {projekt.category && (
+        {projekt.categories.length > 0 && (
           <div>
-            <dt className="meta">Kategorie</dt>
+            <dt className="meta">
+              {projekt.categories.length > 1 ? "Kategorien" : "Kategorie"}
+            </dt>
             <dd className="mt-2 text-lg">
-              <Link
-                href={`/work?kategorie=${projekt.category.slug}`}
-                className="transition-colors hover:text-accent"
-              >
-                {projekt.category.name}
-              </Link>
+              {projekt.categories.map((kategorie, index) => (
+                <span key={kategorie.slug}>
+                  {index > 0 && ", "}
+                  <Link
+                    href={`/work?kategorie=${kategorie.slug}`}
+                    className="transition-colors hover:text-accent"
+                  >
+                    {kategorie.name}
+                  </Link>
+                </span>
+              ))}
             </dd>
           </div>
         )}

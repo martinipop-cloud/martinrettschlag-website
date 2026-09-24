@@ -71,7 +71,9 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
           {project.title}
         </h3>
         <p className="meta mt-1">
-          {[project.client, project.category?.name].filter(Boolean).join(" — ")}
+          {[project.client, project.categories.map((k) => k.name).join(", ")]
+            .filter(Boolean)
+            .join(" — ")}
         </p>
       </Link>
     </article>

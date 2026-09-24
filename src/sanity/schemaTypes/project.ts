@@ -55,13 +55,34 @@ export const project = defineType({
       validation: (rule) => rule.required().min(1),
     }),
     defineField({
+      name: "categories",
+      title: "Kategorien",
+      description:
+        "Steuert, unter welchen Filtern das Projekt erscheint. Mehrere Kategorien möglich – das Projekt taucht dann bei jeder davon auf.",
+      type: "array",
+      group: "content",
+      of: [defineArrayMember({ type: "reference", to: [{ type: "category" }] })],
+      validation: (rule) =>
+        rule.unique().custom((wert, kontext) => {
+          const alt = (kontext.document as { category?: unknown } | undefined)
+            ?.category;
+          return (wert && wert.length > 0) || alt
+            ? true
+            : "Bitte mindestens eine Kategorie wählen.";
+        }),
+    }),
+    // Frühere Einzel-Kategorie. Bleibt für bestehende Projekte gültig, bis
+    // oben Kategorien gewählt sind; danach wird sie ignoriert. Nur sichtbar,
+    // solange noch ein Wert drinsteht.
+    defineField({
       name: "category",
-      title: "Kategorie",
-      description: "Steuert, unter welchem Filter das Projekt erscheint.",
+      title: "Bisherige Kategorie",
+      description:
+        "Stammt aus der Zeit vor der Mehrfachauswahl. Gilt nur, solange oben keine Kategorien gewählt sind. Am besten oben übernehmen und hier löschen.",
       type: "reference",
       group: "content",
       to: [{ type: "category" }],
-      validation: (rule) => rule.required(),
+      hidden: ({ value }) => !value,
     }),
     defineField({
       name: "description",

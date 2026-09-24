@@ -25,7 +25,7 @@ export type ProjectCardData = {
   title: string;
   slug: string;
   client: string;
-  category: Pick<Category, "name" | "slug"> | null;
+  categories: Pick<Category, "name" | "slug">[];
   previewStill: SanityImage | null;
   preview: PreviewAsset;
 };
@@ -44,7 +44,7 @@ export type ProjectDetail = {
   loop: { url: string; mimeType: string | null } | null;
   previewStill: SanityImage | null;
   gallery: SanityImage[] | null;
-  category: Pick<Category, "name" | "slug"> | null;
+  categories: Pick<Category, "name" | "slug">[];
 };
 
 export type ProjectOrderEntry = {

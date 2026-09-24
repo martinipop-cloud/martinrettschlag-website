@@ -1,12 +1,26 @@
 import { defineQuery } from "next-sanity";
 
+/**
+ * Kategorien eines Projekts. Neue Projekte haben mehrere („categories“),
+ * ältere noch die frühere Einzel-Kategorie („category“). Die gilt nur,
+ * solange keine neuen Kategorien gewählt sind.
+ */
+const hatKategorien = `count(coalesce(categories, [])) > 0`;
+const categoriesField = `
+  "categories": select(
+    ${hatKategorien} => categories[]->{name, "slug": slug.current},
+    defined(category) => [category->{name, "slug": slug.current}],
+    []
+  )
+`;
+
 /** Felder, die für eine Projektkachel in den Übersichten gebraucht werden. */
 const cardFields = `
   _id,
   title,
   "slug": slug.current,
   client,
-  "category": category->{name, "slug": slug.current},
+  ${categoriesField},
   previewStill,
   "preview": previewAnimation.asset->{url, extension, mimeType}
 `;
@@ -14,9 +28,14 @@ const cardFields = `
 /**
  * Alle Projekte, optional auf eine Kategorie eingeschränkt (F-202).
  * Ohne Kategorie ($kategorie = null) werden alle zurückgegeben.
+ * Ein Projekt mit mehreren Kategorien erscheint bei jeder davon.
  */
 export const projectsQuery = defineQuery(`
-  *[_type == "project" && ($kategorie == null || category->slug.current == $kategorie)]
+  *[_type == "project" && (
+    $kategorie == null
+    || (${hatKategorien} && $kategorie in categories[]->slug.current)
+    || (!(${hatKategorien}) && category->slug.current == $kategorie)
+  )]
     | order(order asc, title asc) {
     ${cardFields}
   }
@@ -63,7 +82,7 @@ export const projectBySlugQuery = defineQuery(`
         "mimeType": video.asset->mimeType
       }
     },
-    "category": category->{name, "slug": slug.current}
+    ${categoriesField}
   }
 `);
 
