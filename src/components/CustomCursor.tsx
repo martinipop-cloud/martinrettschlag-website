@@ -9,7 +9,8 @@ const KLICKBAR = 'a, button, [role="button"], label, select, summary';
 const TEXTFELD = 'input, textarea, [contenteditable="true"], iframe';
 
 /**
- * Eigener Mauszeiger: ein Punkt, der die Farbe des Hintergrunds umkehrt.
+ * Eigener Mauszeiger: ein Dreieck, das die Farbe des Hintergrunds umkehrt.
+ * (Die Namen „Punkt“ und .cursor-punkt stammen aus der ersten Fassung.)
  *
  * Der Punkt ist weiß und liegt mit dem Mischmodus „difference“ über der
  * Seite – auf hellem Grund erscheint er dunkel, auf dunklem hell, auf Bildern

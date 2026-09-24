@@ -117,11 +117,14 @@ html.eigener-cursor :is(input, textarea, [contenteditable="true"]) {
   cursor: text !important;
 }
 
+/* Gleichseitiges Dreieck mit der Spitze nach oben, mittig auf der
+   Mausposition. Etwas größer als ein Punkt, weil ein Dreieck bei
+   gleicher Breite weniger Fläche hat. */
 .cursor-punkt {
-  width: 14px;
+  width: 16px;
   height: 14px;
-  margin: -7px 0 0 -7px;
-  border-radius: 9999px;
+  margin: -7px 0 0 -8px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
   background: #fff;
   transition:
     transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
