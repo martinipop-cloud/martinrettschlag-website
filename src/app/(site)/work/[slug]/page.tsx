@@ -115,7 +115,15 @@ export default async function ProjectDetailPage({
         height: eintrag.dimensions?.height ?? 1200,
       };
     })
-    .filter((eintrag): eintrag is GalleryItem => eintrag !== null);
+    .filter((eintrag): eintrag is GalleryItem => eintrag !== null)
+    // Ohne eigenen Alternativtext einen aus Titel und Position erzeugen,
+    // z. B. „Projekt – Screenshot 2 von 6“.
+    .map((eintrag, index, alle) => ({
+      ...eintrag,
+      alt:
+        eintrag.alt.trim() ||
+        `${projekt.title} – ${eintrag.art === "clip" ? "Clip" : "Screenshot"} ${index + 1} von ${alle.length}`,
+    }));
 
   // Vorheriges und nächstes Projekt für die Navigation am Seitenende (F-307).
   const position = reihenfolge.findIndex((e) => e.slug === projekt.slug);

@@ -76,8 +76,21 @@ export const youtubeEmbed = defineType({
 });
 
 /**
+ * Liegt das Feld in der Projektgalerie („Screenshots & Clips“)? Dort ist der
+ * Alternativtext freiwillig, weil die Website ohne Eintrag selbst einen aus
+ * Projekttitel und Position erzeugt (z. B. „Projekt – Screenshot 2 von 6“).
+ */
+function inProjektGalerie(kontext: {
+  document?: { _type?: string };
+  path?: unknown[];
+}) {
+  return kontext.document?._type === "project" && kontext.path?.[0] === "gallery";
+}
+
+/**
  * Bild innerhalb eines Blogartikels, mit Pflicht-Alternativtext (N-21)
- * und optionaler Bildunterschrift (F-504).
+ * und optionaler Bildunterschrift (F-504). In der Projektgalerie ist der
+ * Alternativtext freiwillig (siehe inProjektGalerie).
  */
 export const contentImage = defineType({
   name: "contentImage",
@@ -89,9 +102,14 @@ export const contentImage = defineType({
       name: "alt",
       title: "Alternativtext",
       description:
-        "Beschreibt das Bild für Screenreader und wenn das Bild nicht lädt. Pflichtangabe.",
+        "Beschreibt das Bild für Screenreader und wenn das Bild nicht lädt. Pflichtangabe – außer in „Screenshots & Clips“ bei Projekten: Dort wird ohne Eintrag automatisch ein Text aus Projekttitel und Position erzeugt.",
       type: "string",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((wert, kontext) =>
+          wert || inProjektGalerie(kontext)
+            ? true
+            : "Bitte einen Alternativtext eintragen.",
+        ),
     }),
     defineField({
       name: "caption",
@@ -124,11 +142,10 @@ export const galleryVideo = defineType({
     }),
     defineField({
       name: "alt",
-      title: "Alternativtext",
+      title: "Alternativtext (optional)",
       description:
-        "Beschreibt, was im Clip zu sehen ist. Für Screenreader und Suchmaschinen.",
+        "Beschreibt, was im Clip zu sehen ist. Für Screenreader und Suchmaschinen. Ohne Eintrag wird automatisch ein Text aus Projekttitel und Position erzeugt.",
       type: "string",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "caption",
