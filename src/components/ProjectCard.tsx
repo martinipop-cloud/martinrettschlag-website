@@ -22,7 +22,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
   const preview = project.preview;
   const istVideo = preview?.mimeType?.startsWith("video/") ?? false;
   const alt =
-    (project.previewStill as { alt?: string } | null)?.alt ??
+    (project.previewStill as { alt?: string } | null)?.alt?.trim() ||
     `Vorschau: ${project.title}`;
 
   const bildKlassen =

@@ -152,9 +152,10 @@ export const project = defineType({
       fields: [
         defineField({
           name: "alt",
-          title: "Alternativtext",
+          title: "Alternativtext (optional)",
+          description:
+            "Ohne Eintrag wird automatisch „Vorschau: Projekttitel“ verwendet.",
           type: "string",
-          validation: (rule) => rule.required(),
         }),
       ],
       // Prüft auf die Datei selbst, nicht nur auf das Feld: Ein Bildfeld, in
