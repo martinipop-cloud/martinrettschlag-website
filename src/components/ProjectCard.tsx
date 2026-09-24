@@ -31,7 +31,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
   return (
     <article>
       <Link href={`/work/${project.slug}`} className="group block">
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-paper-raised ring-1 ring-line">
+        <div className="relative aspect-video w-full overflow-hidden bg-paper-raised ring-1 ring-line">
           {preview && istVideo ? (
             <video
               className={bildKlassen}
