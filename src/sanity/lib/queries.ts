@@ -1,17 +1,8 @@
 import { defineQuery } from "next-sanity";
 
-/**
- * Kategorien eines Projekts. Neue Projekte haben mehrere („categories“),
- * ältere noch die frühere Einzel-Kategorie („category“). Die gilt nur,
- * solange keine neuen Kategorien gewählt sind.
- */
-const hatKategorien = `count(coalesce(categories, [])) > 0`;
+/** Kategorien eines Projekts – immer eine Liste, notfalls leer. */
 const categoriesField = `
-  "categories": select(
-    ${hatKategorien} => categories[]->{name, "slug": slug.current},
-    defined(category) => [category->{name, "slug": slug.current}],
-    []
-  )
+  "categories": coalesce(categories[]->{name, "slug": slug.current}, [])
 `;
 
 /** Felder, die für eine Projektkachel in den Übersichten gebraucht werden. */
@@ -31,11 +22,7 @@ const cardFields = `
  * Ein Projekt mit mehreren Kategorien erscheint bei jeder davon.
  */
 export const projectsQuery = defineQuery(`
-  *[_type == "project" && (
-    $kategorie == null
-    || (${hatKategorien} && $kategorie in categories[]->slug.current)
-    || (!(${hatKategorien}) && category->slug.current == $kategorie)
-  )]
+  *[_type == "project" && ($kategorie == null || $kategorie in categories[]->slug.current)]
     | order(order asc, title asc) {
     ${cardFields}
   }

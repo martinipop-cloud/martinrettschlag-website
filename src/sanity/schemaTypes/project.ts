@@ -63,26 +63,11 @@ export const project = defineType({
       group: "content",
       of: [defineArrayMember({ type: "reference", to: [{ type: "category" }] })],
       validation: (rule) =>
-        rule.unique().custom((wert, kontext) => {
-          const alt = (kontext.document as { category?: unknown } | undefined)
-            ?.category;
-          return (wert && wert.length > 0) || alt
-            ? true
-            : "Bitte mindestens eine Kategorie wählen.";
-        }),
-    }),
-    // Frühere Einzel-Kategorie. Bleibt für bestehende Projekte gültig, bis
-    // oben Kategorien gewählt sind; danach wird sie ignoriert. Nur sichtbar,
-    // solange noch ein Wert drinsteht.
-    defineField({
-      name: "category",
-      title: "Bisherige Kategorie",
-      description:
-        "Stammt aus der Zeit vor der Mehrfachauswahl. Gilt nur, solange oben keine Kategorien gewählt sind. Am besten oben übernehmen und hier löschen.",
-      type: "reference",
-      group: "content",
-      to: [{ type: "category" }],
-      hidden: ({ value }) => !value,
+        rule
+          .required()
+          .min(1)
+          .unique()
+          .error("Bitte mindestens eine Kategorie wählen."),
     }),
     defineField({
       name: "description",
