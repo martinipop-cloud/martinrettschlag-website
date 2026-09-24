@@ -11,7 +11,7 @@ const cardFields = `
   title,
   "slug": slug.current,
   client,
-  ${categoriesField},
+  "roles": coalesce(roles, []),
   previewStill,
   "preview": previewAnimation.asset->{url, extension, mimeType}
 `;

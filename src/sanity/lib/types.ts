@@ -25,7 +25,7 @@ export type ProjectCardData = {
   title: string;
   slug: string;
   client: string;
-  categories: Pick<Category, "name" | "slug">[];
+  roles: string[];
   previewStill: SanityImage | null;
   preview: PreviewAsset;
 };
