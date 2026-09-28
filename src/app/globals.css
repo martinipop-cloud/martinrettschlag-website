@@ -119,33 +119,47 @@ html.eigener-cursor :is(input, textarea, [contenteditable="true"]) {
 
 /* Gleichseitiges Dreieck mit der Spitze nach oben, mittig auf der
    Mausposition. Etwas größer als ein Punkt, weil ein Dreieck bei
-   gleicher Breite weniger Fläche hat. */
+   gleicher Breite weniger Fläche hat.
+   Der Schwerpunkt des Dreiecks liegt bei zwei Dritteln der Höhe – dort
+   sitzt die Mausposition, und um diesen Punkt dreht es sich auch.
+   Größe und Drehung laufen über die eigenen Eigenschaften „scale“ und
+   „rotate“, damit sich Übergang und Dauerdrehung nicht gegenseitig
+   überschreiben. */
 .cursor-punkt {
   width: 16px;
   height: 14px;
-  margin: -7px 0 0 -8px;
+  margin: -9.33px 0 0 -8px;
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
   background: #fff;
+  transform-origin: 50% 66.67%;
   transition:
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.2s ease;
 }
 
+/* Über Links und Schaltflächen: doppelt so groß und langsam drehend. */
 .cursor-punkt[data-zustand="gross"] {
-  transform: scale(3);
+  scale: 2;
+  animation: cursor-drehen 2.4s linear infinite;
+}
+
+@keyframes cursor-drehen {
+  to {
+    rotate: 360deg;
+  }
 }
 
 .cursor-punkt[data-zustand="aus"] {
   opacity: 0;
-  transform: scale(0.3);
+  scale: 0.3;
 }
 
 .cursor-punkt[data-gedrueckt] {
-  transform: scale(0.7);
+  scale: 0.7;
 }
 
 .cursor-punkt[data-zustand="gross"][data-gedrueckt] {
-  transform: scale(2.4);
+  scale: 1.6;
 }
 
 /* Bei „Bewegung reduzieren“ werden Übergänge und Scroll-Effekte der
