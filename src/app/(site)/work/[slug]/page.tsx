@@ -174,11 +174,17 @@ export default async function ProjectDetailPage({
       </div>
 
       {/* Kunde und Rolle direkt unter dem Video (F-303) */}
-      <dl className="mt-10 grid grid-cols-1 gap-x-10 gap-y-6 border-t border-line pt-8 sm:grid-cols-3">
+      <dl className="mt-10 grid grid-cols-1 gap-x-10 gap-y-6 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <dt className="meta">Kunde</dt>
           <dd className="mt-2 text-lg">{projekt.client}</dd>
         </div>
+        {projekt.agency && (
+          <div>
+            <dt className="meta">Agentur</dt>
+            <dd className="mt-2 text-lg">{projekt.agency}</dd>
+          </div>
+        )}
         {projekt.roles && projekt.roles.length > 0 && (
           <div>
             <dt className="meta">Rolle</dt>

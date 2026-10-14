@@ -11,6 +11,7 @@ const cardFields = `
   title,
   "slug": slug.current,
   client,
+  agency,
   "roles": coalesce(roles, []),
   previewStill,
   "preview": previewAnimation.asset->{url, extension, mimeType}
@@ -53,6 +54,7 @@ export const projectBySlugQuery = defineQuery(`
     title,
     "slug": slug.current,
     client,
+    agency,
     roles,
     description,
     medium,
@@ -167,6 +169,8 @@ export const siteSettingsQuery = defineQuery(`
     youtubeUrl,
     linkedinUrl,
     defaultPaypalUrl,
+    referenceClients,
+    referenceAgencies,
     seoTitle,
     seoDescription,
     ogImage

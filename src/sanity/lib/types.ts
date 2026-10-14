@@ -25,6 +25,7 @@ export type ProjectCardData = {
   title: string;
   slug: string;
   client: string;
+  agency: string | null;
   roles: string[];
   previewStill: SanityImage | null;
   preview: PreviewAsset;
@@ -36,6 +37,7 @@ export type ProjectDetail = {
   title: string;
   slug: string;
   client: string;
+  agency: string | null;
   roles: string[] | null;
   description: PortableTextBlock[] | null;
   /** "youtube" = eingebettetes YouTube-Video, "loop" = eigenes Loop-Video. */

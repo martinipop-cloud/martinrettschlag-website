@@ -70,10 +70,11 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
         <h3 className="display mt-4 text-2xl transition-colors group-hover:text-accent">
           {project.title}
         </h3>
+        {project.roles.length > 0 && (
+          <p className="meta mt-1">{project.roles.join(", ")}</p>
+        )}
         <p className="meta mt-1">
-          {[project.client, project.roles.join(", ")]
-            .filter(Boolean)
-            .join(" — ")}
+          {[project.client, project.agency].filter(Boolean).join(" – ")}
         </p>
       </Link>
     </article>

@@ -38,10 +38,19 @@ export const project = defineType({
     defineField({
       name: "client",
       title: "Kunde",
-      description: "Auftraggeber oder Agentur. Wird unter dem Video angezeigt.",
+      description:
+        "Auftraggeber. Erscheint unter der Kachel und auf der Projektseite.",
       type: "string",
       group: "content",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "agency",
+      title: "Agentur",
+      description:
+        "Optional. Agentur oder Produktion, über die der Auftrag kam. Erscheint unter der Kachel neben dem Kunden und auf der Projektseite.",
+      type: "string",
+      group: "content",
     }),
     defineField({
       name: "roles",
