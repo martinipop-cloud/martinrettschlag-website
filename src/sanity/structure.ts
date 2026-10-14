@@ -2,7 +2,7 @@ import type { StructureResolver } from "sanity/structure";
 
 /**
  * Aufbau der linken Navigationsspalte im Studio.
- * „Website-Einstellungen“ ist ein Einzeldokument und wird deshalb direkt
+ * „Website-Einstellungen“ und „Referenzen“ sind Einzeldokumente und werden deshalb direkt
  * geöffnet, statt als Liste mit einem einzigen Eintrag zu erscheinen.
  */
 export const structure: StructureResolver = (S) =>
@@ -15,6 +15,16 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("tool").title("Software / Scripts"),
       S.divider(),
       S.documentTypeListItem("post").title("Blogartikel"),
+      S.divider(),
+      S.listItem()
+        .title("Referenzen (Trust me)")
+        .id("references")
+        .child(
+          S.document()
+            .schemaType("references")
+            .documentId("references")
+            .title("Referenzen (Trust me)"),
+        ),
       S.divider(),
       S.documentTypeListItem("legalPage").title("Rechtstexte"),
       S.listItem()

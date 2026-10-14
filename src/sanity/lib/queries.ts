@@ -155,6 +155,11 @@ export const legalPageQuery = defineQuery(`
   }
 `);
 
+/** Referenzlisten für die Seite „Trust me“ (Einzeldokument). */
+export const referencesQuery = defineQuery(`
+  *[_id == "references"][0] { brands, partners }
+`);
+
 /** Einstellungen der Website (Einzeldokument). */
 export const siteSettingsQuery = defineQuery(`
   *[_type == "siteSettings"][0] {
@@ -169,8 +174,6 @@ export const siteSettingsQuery = defineQuery(`
     youtubeUrl,
     linkedinUrl,
     defaultPaypalUrl,
-    referenceClients,
-    referenceAgencies,
     seoTitle,
     seoDescription,
     ogImage

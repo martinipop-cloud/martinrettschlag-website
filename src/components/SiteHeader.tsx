@@ -10,6 +10,7 @@ const navigation = [
   { href: "/work", label: "Work" },
   { href: "/software", label: "Software" },
   { href: "/blog", label: "What I Like" },
+  { href: "/trust-me", label: "Trust me" },
   { href: "/contact", label: "Contact" },
 ];
 

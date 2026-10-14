@@ -11,7 +11,6 @@ export const siteSettings = defineType({
   groups: [
     { name: "texts", title: "Texte", default: true },
     { name: "contact", title: "Kontakt & Social" },
-    { name: "references", title: "Referenzen" },
     { name: "seo", title: "Suchmaschinen" },
   ],
   fields: [
@@ -106,27 +105,6 @@ export const siteSettings = defineType({
         "Wird für alle Tools verwendet, bei denen kein eigener Link hinterlegt ist.",
       type: "url",
       group: "contact",
-    }),
-
-    defineField({
-      name: "referenceClients",
-      title: "Referenzliste Kunden",
-      description:
-        "Erscheint auf der Kontaktseite. Die Website sortiert die Namen automatisch alphabetisch – die Reihenfolge hier spielt keine Rolle. Bleibt die Liste leer, entfällt die Spalte.",
-      type: "array",
-      group: "references",
-      of: [{ type: "string" }],
-      validation: (rule) => rule.unique(),
-    }),
-    defineField({
-      name: "referenceAgencies",
-      title: "Referenzliste Agenturen",
-      description:
-        "Erscheint auf der Kontaktseite neben den Kunden, ebenfalls automatisch alphabetisch sortiert.",
-      type: "array",
-      group: "references",
-      of: [{ type: "string" }],
-      validation: (rule) => rule.unique(),
     }),
 
     defineField({

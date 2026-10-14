@@ -17,17 +17,7 @@ type SiteSettings = {
   instagramUrl: string | null;
   youtubeUrl: string | null;
   linkedinUrl: string | null;
-  referenceClients: string[] | null;
-  referenceAgencies: string[] | null;
 } | null;
-
-/** Alphabetisch nach deutscher Sortierung, Groß-/Kleinschreibung egal. */
-function sortiert(namen: string[] | null | undefined) {
-  return (namen ?? [])
-    .map((name) => name.trim())
-    .filter(Boolean)
-    .sort((a, b) => a.localeCompare(b, "de", { sensitivity: "base" }));
-}
 
 /**
  * Kontaktseite (Kapitel 4.6): Formular, Mailadresse, Standort und Social-Links.
@@ -45,14 +35,9 @@ export default async function ContactPage() {
     Boolean(link.href),
   );
 
-  const referenzen = [
-    { titel: "Kunden", namen: sortiert(einstellungen?.referenceClients) },
-    { titel: "Agenturen", namen: sortiert(einstellungen?.referenceAgencies) },
-  ].filter((liste) => liste.namen.length > 0);
-
   return (
     <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-28 md:px-10 md:pt-20">
-      <p className="meta">05 — Contact</p>
+      <p className="meta">06 — Contact</p>
       <h1 className="display mt-6 text-[clamp(2.5rem,9vw,7rem)]">Kontakt</h1>
 
       <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-[1fr_auto] lg:gap-24">
@@ -98,25 +83,6 @@ export default async function ContactPage() {
           )}
         </aside>
       </div>
-
-      {/* Referenzlisten, gepflegt in den Website-Einstellungen (Reiter
-          „Referenzen“). Leere Listen werden nicht angezeigt. */}
-      {referenzen.length > 0 && (
-        <div className="mt-24 grid grid-cols-1 gap-16 border-t border-line pt-10 md:grid-cols-2 md:gap-10">
-          {referenzen.map((liste) => (
-            <div key={liste.titel}>
-              <h2 className="meta">
-                {liste.titel} — {liste.namen.length}
-              </h2>
-              <ul className="mt-6 flex flex-col gap-1.5 text-lg">
-                {liste.namen.map((name) => (
-                  <li key={name}>{name}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
     </section>
   );
 }

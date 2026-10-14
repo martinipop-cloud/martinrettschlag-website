@@ -11,6 +11,7 @@ import { category } from "./category";
 import { legalPage } from "./legalPage";
 import { post } from "./post";
 import { project } from "./project";
+import { references } from "./references";
 import { siteSettings } from "./siteSettings";
 import { tool } from "./tool";
 
@@ -28,6 +29,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     tool,
     post,
     legalPage,
+    references,
     siteSettings,
   ],
 };
