@@ -15,24 +15,22 @@ type References = {
   partners: string[] | null;
 } | null;
 
-/** Alphabetisch nach deutscher Sortierung, Groß-/Kleinschreibung egal. */
-function sortiert(namen: string[] | null | undefined) {
-  return (namen ?? [])
-    .map((name) => name.trim())
-    .filter(Boolean)
-    .sort((a, b) => a.localeCompare(b, "de", { sensitivity: "base" }));
+/** Leere Einträge entfernen; die Reihenfolge aus dem Studio bleibt erhalten. */
+function bereinigt(namen: string[] | null | undefined) {
+  return (namen ?? []).map((name) => name.trim()).filter(Boolean);
 }
 
 /**
  * Referenzlisten „Marken“ und „Partner“, gepflegt im Studio unter
- * „Referenzen (Trust me)“. Leere Listen werden nicht angezeigt.
+ * „Referenzen (Trust me)“ – in genau der Reihenfolge, die dort per Ziehen
+ * festgelegt ist. Leere Listen werden nicht angezeigt.
  */
 export default async function TrustMePage() {
   const referenzen = await client.fetch<References>(referencesQuery);
 
   const listen = [
-    { titel: "Marken", namen: sortiert(referenzen?.brands) },
-    { titel: "Partner", namen: sortiert(referenzen?.partners) },
+    { titel: "Marken", namen: bereinigt(referenzen?.brands) },
+    { titel: "Partner", namen: bereinigt(referenzen?.partners) },
   ].filter((liste) => liste.namen.length > 0);
 
   return (

@@ -13,7 +13,7 @@ export const references = defineType({
       name: "brands",
       title: "Marken",
       description:
-        "Kunden und Marken, für die du gearbeitet hast. Die Website sortiert die Namen automatisch alphabetisch – die Reihenfolge hier spielt keine Rolle. Bleibt die Liste leer, entfällt die Spalte.",
+        "Kunden und Marken, für die du gearbeitet hast. Die Website zeigt die Namen in genau dieser Reihenfolge – per Ziehen am Griff links änderbar. Bleibt die Liste leer, entfällt die Spalte.",
       type: "array",
       of: [{ type: "string" }],
       validation: (rule) => rule.unique(),
@@ -22,7 +22,7 @@ export const references = defineType({
       name: "partners",
       title: "Partner",
       description:
-        "Agenturen und Produktionen, mit denen du gearbeitet hast. Ebenfalls automatisch alphabetisch sortiert.",
+        "Agenturen und Produktionen, mit denen du gearbeitet hast. Erscheinen in genau dieser Reihenfolge auf der Website.",
       type: "array",
       of: [{ type: "string" }],
       validation: (rule) => rule.unique(),
