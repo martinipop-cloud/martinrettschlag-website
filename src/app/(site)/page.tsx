@@ -34,7 +34,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-28 md:px-10 md:pt-20">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <p className="meta leading-relaxed">
-            Animation & VFX
+            Animation, VFX and Digital Production
             {einstellungen?.location && (
               <>
                 <br />
