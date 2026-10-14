@@ -24,9 +24,9 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "bio",
-      title: "Kurzbiografie (Startseite)",
+      title: "Kurzbiografie (Kontaktseite)",
       description:
-        "Erscheint auf der Startseite unter dem Statement. Wer du bist, was du machst, womit du arbeitest — zwei bis fünf Sätze reichen. Bleibt das Feld leer, wird der Abschnitt gar nicht angezeigt.",
+        "Erscheint oben auf der Kontaktseite, neben dem Portraitfoto. Wer du bist, was du machst, womit du arbeitest — zwei bis fünf Sätze reichen. Bleibt das Feld leer, wird der Abschnitt gar nicht angezeigt.",
       type: "richText",
       group: "texts",
     }),
