@@ -7,7 +7,8 @@ import type { Category } from "@/sanity/lib/types";
  *
  * Die aktive Kategorie steht in der Adresse (/work?kategorie=…), damit sie
  * teilbar ist. Die Umschaltung läuft über Next.js-Navigation, also ohne
- * vollständiges Neuladen der Seite.
+ * vollständiges Neuladen der Seite. Einen „Alle“-Filter gibt es bewusst
+ * nicht; ohne Auswahl ist die erste Kategorie aktiv.
  */
 export function CategoryFilter({
   categories,
@@ -18,20 +19,15 @@ export function CategoryFilter({
 }) {
   if (categories.length === 0) return null;
 
-  const entries = [
-    { slug: null, name: "Alle" },
-    ...categories.map((c) => ({ slug: c.slug, name: c.name })),
-  ];
-
   return (
     <nav aria-label="Projekte nach Kategorie filtern" className="mt-8">
       <ul className="flex flex-wrap gap-2">
-        {entries.map((entry) => {
+        {categories.map((entry) => {
           const isActive = entry.slug === active;
           return (
-            <li key={entry.slug ?? "alle"}>
+            <li key={entry.slug}>
               <Link
-                href={entry.slug ? `/work?kategorie=${entry.slug}` : "/work"}
+                href={`/work?kategorie=${entry.slug}`}
                 aria-current={isActive ? "true" : undefined}
                 className={`meta inline-block rounded-full border px-4 py-2 transition-colors ${
                   isActive

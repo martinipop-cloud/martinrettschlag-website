@@ -20,14 +20,18 @@ export default async function WorkPage({
   searchParams: Promise<{ kategorie?: string }>;
 }) {
   const { kategorie } = await searchParams;
-  const aktiveKategorie = kategorie ?? null;
+  const kategorien = await client.fetch<Category[]>(categoriesQuery);
 
-  const [projekte, kategorien] = await Promise.all([
-    client.fetch<ProjectCardData[]>(projectsQuery, {
-      kategorie: aktiveKategorie,
-    }),
-    client.fetch<Category[]>(categoriesQuery),
-  ]);
+  // Kein „Alle“-Filter: ohne (gültige) Auswahl startet die Seite mit der
+  // ersten Kategorie laut Sortierung im CMS – aktuell Motion Design.
+  const aktiveKategorie =
+    kategorien.find((k) => k.slug === kategorie)?.slug ??
+    kategorien[0]?.slug ??
+    null;
+
+  const projekte = await client.fetch<ProjectCardData[]>(projectsQuery, {
+    kategorie: aktiveKategorie,
+  });
 
   return (
     <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-28 md:px-10 md:pt-20">
