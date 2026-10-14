@@ -46,9 +46,9 @@ export const project = defineType({
     }),
     defineField({
       name: "agency",
-      title: "Agentur",
+      title: "Agentur / Produktion",
       description:
-        "Optional. Agentur oder Produktion, über die der Auftrag kam. Erscheint unter der Kachel neben dem Kunden und auf der Projektseite.",
+        "Optional. Agentur oder Produktion, über die der Auftrag kam. Erscheint unter der Kachel neben dem Kunden und auf der Projektseite. Bleibt das Feld leer, wird es dort nicht angezeigt.",
       type: "string",
       group: "content",
     }),

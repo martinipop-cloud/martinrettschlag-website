@@ -181,7 +181,7 @@ export default async function ProjectDetailPage({
         </div>
         {projekt.agency && (
           <div>
-            <dt className="meta">Agentur</dt>
+            <dt className="meta">Agentur / Produktion</dt>
             <dd className="mt-2 text-lg">{projekt.agency}</dd>
           </div>
         )}
