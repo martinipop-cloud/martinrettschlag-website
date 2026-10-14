@@ -26,7 +26,7 @@ export const siteSettings = defineType({
       name: "bio",
       title: "Kurzbiografie (Startseite)",
       description:
-        "Erscheint auf der Startseite unter dem Statement. Wer du bist, was du machst, womit du arbeitest — zwei bis fünf Sätze reichen. Bleibt das Feld leer, wird der Abschnitt gar nicht angezeigt.",
+        "Erscheint auf der Startseite unter dem Statement. Wer du bist, was du machst, womit du arbeitest — zwei bis fünf Sätze reichen. Der erste Absatz erscheint fett und etwas größer: nach der ersten Zeile einfach Enter drücken. Bleibt das Feld leer, wird der Abschnitt gar nicht angezeigt.",
       type: "richText",
       group: "texts",
     }),

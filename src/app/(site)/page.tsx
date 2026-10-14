@@ -82,7 +82,8 @@ export default async function HomePage() {
                 />
               )}
 
-              <div className="max-w-2xl text-lg">
+              {/* Erster Absatz als Einstieg: fett und etwas größer. */}
+              <div className="max-w-2xl text-lg [&>p:first-child]:text-2xl [&>p:first-child]:leading-snug [&>p:first-child]:font-bold">
                 <RichText value={einstellungen.bio} />
               </div>
             </div>
