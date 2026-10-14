@@ -42,7 +42,7 @@ export default async function BlogPage() {
     <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-28 md:px-10 md:pt-20">
       <p className="meta">04 — What I Like</p>
       <h1 className="display mt-6 text-[clamp(2.5rem,9vw,7rem)]">
-        What I <span className="script">Like</span>
+        Ick mag <span className="script">dit</span>
       </h1>
 
       {artikel.length === 0 ? (
