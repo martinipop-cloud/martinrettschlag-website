@@ -8,7 +8,7 @@ import type { Category, ProjectCardData } from "@/sanity/lib/types";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Ausgewählte Motion-Design-Projekte von Martin Rettschlag.",
+  description: "Ausgewählte Motion-Graphics-Projekte von Martin Rettschlag.",
 };
 
 // Änderungen im CMS erscheinen spätestens nach einer Minute.
