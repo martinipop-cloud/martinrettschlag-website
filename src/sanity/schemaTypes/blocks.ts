@@ -125,6 +125,26 @@ export const contentImage = defineType({
       description: "Wird sichtbar unter dem Bild angezeigt. Optional.",
       type: "string",
     }),
+    // Nur in Blogartikeln: Wie breit das Bild in der Textspalte erscheint.
+    defineField({
+      name: "size",
+      title: "Größe",
+      description:
+        "Wie breit das Bild im Artikel erscheint. Kleinere Bilder stehen mittig. Auf dem Handy werden kleine Bilder etwas größer dargestellt.",
+      type: "string",
+      options: {
+        list: [
+          { title: "Klein", value: "klein" },
+          { title: "Mittel", value: "mittel" },
+          { title: "Groß", value: "gross" },
+          { title: "Volle Breite", value: "voll" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "voll",
+      hidden: ({ document }) => document?._type !== "post",
+    }),
   ],
 });
 

@@ -13,6 +13,38 @@ import { hatBild, urlFor } from "@/sanity/lib/image";
  * Darstellung eines Blogartikels (F-503 bis F-506).
  * Neben Fließtext werden Bilder, YouTube-Videos und Codeblöcke unterstützt.
  */
+/**
+ * Bildgrößen im Artikel, im CMS je Bild wählbar (Feld „Größe“).
+ * Die Textspalte ist höchstens 800 px breit. Auf dem Handy werden kleine
+ * Bilder größer dargestellt, damit sie nicht winzig wirken.
+ */
+type Bildgroesse = "klein" | "mittel" | "gross" | "voll";
+const BILDGROESSEN: Record<
+  Bildgroesse,
+  { klasse: string; sizes: string; pixel: number }
+> = {
+  klein: {
+    klasse: "w-2/3 sm:w-1/3",
+    sizes: "(min-width: 1024px) 270px, (min-width: 640px) 33vw, 66vw",
+    pixel: 700,
+  },
+  mittel: {
+    klasse: "w-full sm:w-1/2",
+    sizes: "(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw",
+    pixel: 900,
+  },
+  gross: {
+    klasse: "w-full sm:w-3/4",
+    sizes: "(min-width: 1024px) 600px, (min-width: 640px) 75vw, 100vw",
+    pixel: 1200,
+  },
+  voll: {
+    klasse: "w-full",
+    sizes: "(min-width: 1024px) 800px, 100vw",
+    pixel: 1400,
+  },
+};
+
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
@@ -69,14 +101,15 @@ const components: PortableTextComponents = {
       // Bildfeld ohne hochgeladene Datei überspringen.
       if (!hatBild(value)) return null;
       const masse = value?.dimensions ?? { width: 1600, height: 1067 };
+      const groesse = BILDGROESSEN[value?.size as Bildgroesse] ?? BILDGROESSEN.voll;
       return (
-        <figure className="my-10">
+        <figure className={`mx-auto my-10 ${groesse.klasse}`}>
           <Image
-            src={urlFor(value).width(1400).fit("max").auto("format").url()}
+            src={urlFor(value).width(groesse.pixel).fit("max").auto("format").url()}
             alt={value?.alt ?? ""}
             width={masse.width}
             height={masse.height}
-            sizes="(min-width: 1024px) 800px, 100vw"
+            sizes={groesse.sizes}
             className="h-auto w-full ring-1 ring-line"
           />
           {value?.caption && (
