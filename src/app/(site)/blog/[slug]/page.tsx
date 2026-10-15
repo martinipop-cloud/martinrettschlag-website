@@ -6,8 +6,12 @@ import { notFound } from "next/navigation";
 import { BlogBody, lesedauerMinuten } from "@/components/BlogBody";
 import { client } from "@/sanity/lib/client";
 import { hatBild, urlFor } from "@/sanity/lib/image";
-import { postBySlugQuery, postSlugsQuery } from "@/sanity/lib/queries";
-import type { PostDetail } from "@/sanity/lib/types";
+import {
+  postBySlugQuery,
+  postOrderQuery,
+  postSlugsQuery,
+} from "@/sanity/lib/queries";
+import type { PostDetail, ProjectOrderEntry } from "@/sanity/lib/types";
 
 export const revalidate = 60;
 
@@ -49,11 +53,21 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const beitrag = await client.fetch<PostDetail | null>(postBySlugQuery, {
-    slug,
-  });
+  const [beitrag, reihenfolge] = await Promise.all([
+    client.fetch<PostDetail | null>(postBySlugQuery, { slug }),
+    client.fetch<ProjectOrderEntry[]>(postOrderQuery),
+  ]);
 
   if (!beitrag) notFound();
+
+  // Vorheriger und nächster Artikel für die Navigation am Seitenende –
+  // gleiche Reihenfolge wie in der Übersicht, neueste zuerst.
+  const position = reihenfolge.findIndex((e) => e.slug === beitrag.slug);
+  const vorheriger = position > 0 ? reihenfolge[position - 1] : null;
+  const naechster =
+    position >= 0 && position < reihenfolge.length - 1
+      ? reihenfolge[position + 1]
+      : null;
 
   const datum = new Date(beitrag.publishedAt).toLocaleDateString("de-DE", {
     day: "2-digit",
@@ -94,6 +108,34 @@ export default async function BlogPostPage({
       <div className="mt-12 text-lg">
         <BlogBody value={beitrag.body} />
       </div>
+
+      {(vorheriger || naechster) && (
+        <nav
+          aria-label="Weitere Artikel"
+          className="mt-24 flex flex-wrap items-start justify-between gap-6 border-t border-line pt-8"
+        >
+          <div>
+            {vorheriger && (
+              <Link href={`/blog/${vorheriger.slug}`} className="group block">
+                <span className="meta">← Vorheriger</span>
+                <span className="display mt-2 block text-xl transition-colors group-hover:text-accent">
+                  {vorheriger.title}
+                </span>
+              </Link>
+            )}
+          </div>
+          <div className="text-right">
+            {naechster && (
+              <Link href={`/blog/${naechster.slug}`} className="group block">
+                <span className="meta">Nächster →</span>
+                <span className="display mt-2 block text-xl transition-colors group-hover:text-accent">
+                  {naechster.title}
+                </span>
+              </Link>
+            )}
+          </div>
+        </nav>
+      )}
     </article>
   );
 }

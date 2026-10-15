@@ -125,6 +125,16 @@ export const postsQuery = defineQuery(`
   }
 `);
 
+/**
+ * Reihenfolge aller Artikel wie in der Übersicht (neueste zuerst) – daraus
+ * wird im Artikel der vorherige und nächste Eintrag bestimmt.
+ */
+export const postOrderQuery = defineQuery(`
+  *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+    title, "slug": slug.current
+  }
+`);
+
 /** Einzelner Blogartikel (F-503 bis F-506). */
 export const postBySlugQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug][0] {
