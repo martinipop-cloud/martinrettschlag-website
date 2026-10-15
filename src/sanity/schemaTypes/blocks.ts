@@ -61,6 +61,14 @@ export const youtubeEmbed = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "poster",
+      title: "Standbild (optional)",
+      description:
+        "Wird vor dem Abspielen angezeigt. Ohne eigenes Bild erscheint automatisch das Vorschaubild von YouTube. Empfohlen: 16:9, z. B. 1920 × 1080 Pixel.",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
       name: "caption",
       title: "Bildunterschrift",
       type: "string",

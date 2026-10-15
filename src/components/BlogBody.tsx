@@ -6,7 +6,7 @@ import {
 import Image from "next/image";
 
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
-import { getYouTubeId } from "@/lib/youtube";
+import { getYouTubeId, youTubeThumbnail } from "@/lib/youtube";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 
 /**
@@ -89,12 +89,16 @@ const components: PortableTextComponents = {
     youtubeEmbed: ({ value }) => {
       const videoId = getYouTubeId(value?.url);
       if (!videoId) return null;
+      // Eigenes Standbild aus dem CMS hat Vorrang, sonst das YouTube-Vorschaubild.
+      const posterUrl = hatBild(value?.poster)
+        ? urlFor(value.poster).width(1600).height(900).fit("crop").auto("format").url()
+        : youTubeThumbnail(videoId);
       return (
         <figure className="my-10">
           <YouTubeEmbed
             videoId={videoId}
             title={value?.caption ?? "Video"}
-            posterUrl={null}
+            posterUrl={posterUrl}
           />
           {value?.caption && (
             <figcaption className="meta mt-3">{value.caption}</figcaption>

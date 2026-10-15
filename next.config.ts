@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.sanity.io",
       },
+      // YouTube-Vorschaubilder für Videos ohne eigenes Standbild. Der eigene
+      // Server holt sie ab, Besucher haben keinen Kontakt zu Google.
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+        pathname: "/vi/**",
+      },
     ],
   },
 };

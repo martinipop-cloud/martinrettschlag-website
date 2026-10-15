@@ -1,12 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 /**
  * Datenschutzfreundliche YouTube-Einbettung (F-309, R-06).
  *
- * Vor dem Klick wird nichts von Google geladen – das Vorschaubild kommt aus
- * dem eigenen CMS. Erst nach dem Klick des Nutzers wird der Player über
+ * Vor dem Klick hat der Browser keinen Kontakt zu Google: Das Vorschaubild
+ * kommt aus dem CMS oder – bei YouTube-Thumbnails – über next/image vom
+ * eigenen Server, der es bei YouTube abholt. Erst nach dem Klick des Nutzers wird der Player über
  * youtube-nocookie.com nachgeladen. Das erspart einen Consent-Zwang für das
  * bloße Betrachten der Projektseite und beschleunigt den Seitenaufbau (N-04).
  */
@@ -42,11 +44,14 @@ export function YouTubeEmbed({
       className="group relative block aspect-video w-full cursor-pointer overflow-hidden bg-paper-raised ring-1 ring-line"
     >
       {posterUrl && (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
+        // Über next/image, damit auch YouTube-Thumbnails vom eigenen
+        // Server ausgeliefert werden statt direkt von Google.
+        <Image
           src={posterUrl}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          sizes="(min-width: 1200px) 1200px, 100vw"
+          className="object-cover"
         />
       )}
 
