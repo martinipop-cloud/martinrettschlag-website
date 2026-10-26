@@ -23,20 +23,16 @@ const components: PortableTextComponents = {
   },
 };
 
+/**
+ * Ohne Text im CMS erscheint gar keine Überschrift — kein Ersatztext.
+ * Die Startseite beginnt dann direkt mit der Kurzbiografie.
+ */
 export function HomeStatement({
   value,
 }: {
   value: PortableTextBlock[] | null;
 }) {
-  if (!value || value.length === 0) {
-    return (
-      <>
-        Motion
-        <br />
-        <span className="script">with</span> Impact
-      </>
-    );
-  }
+  if (!value || value.length === 0) return null;
 
   return <PortableText value={value} components={components} />;
 }

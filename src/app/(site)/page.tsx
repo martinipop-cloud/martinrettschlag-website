@@ -45,9 +45,20 @@ export default async function HomePage() {
           <p className="meta">Portfolio 2026</p>
         </div>
 
-        <h1 className="display mt-20 text-[clamp(3rem,13vw,12rem)] md:mt-32">
-          <HomeStatement value={einstellungen?.homeStatement ?? null} />
-        </h1>
+        {/* Die große Überschrift erscheint nur, wenn im CMS ein Statement
+            hinterlegt ist. Ohne Statement steht hier eine unsichtbare
+            Überschrift: Jede Seite braucht genau eine oberste Überschrift,
+            sonst fehlt Suchmaschinen und Screenreadern die Einordnung. */}
+        {einstellungen?.homeStatement &&
+        einstellungen.homeStatement.length > 0 ? (
+          <h1 className="display mt-20 text-[clamp(3rem,13vw,12rem)] md:mt-32">
+            <HomeStatement value={einstellungen.homeStatement} />
+          </h1>
+        ) : (
+          <h1 className="sr-only">
+            Martin Rettschlag — Animation, VFX and Digital Production
+          </h1>
+        )}
       </section>
 
       {/* Kurzbiografie. Erscheint nur, wenn im CMS ein Text hinterlegt ist. */}
