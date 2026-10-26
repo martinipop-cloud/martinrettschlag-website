@@ -1,9 +1,11 @@
-import Image from "next/image";
+﻿import Image from "next/image";
+import Link from "next/link";
 
 import { DownloadButton } from "@/components/DownloadButton";
 import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
+import { richText, type Sprache, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ToolData } from "@/sanity/lib/types";
 
@@ -23,10 +25,13 @@ function dateigroesse(bytes: number | null): string | null {
 export function ToolCard({
   tool,
   standardPaypalLink,
+  sprache,
 }: {
   tool: ToolData;
   standardPaypalLink: string | null;
+  sprache: Sprache;
 }) {
+  const name = text(tool.name, sprache);
   const istKauf = tool.vertrieb === "kauf";
   const spendenLink = tool.paypalUrl ?? standardPaypalLink;
   const groesse = dateigroesse(tool.datei?.size ?? null);
@@ -52,8 +57,8 @@ export function ToolCard({
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="display text-3xl md:text-4xl">{tool.name}</h2>
-          <p className="meta mt-2">{tool.compatibility}</p>
+          <h2 className="display text-3xl md:text-4xl">{name}</h2>
+          <p className="meta mt-2">{text(tool.compatibility, sprache)}</p>
         </div>
         {istKauf
           ? preis && (
@@ -70,14 +75,19 @@ export function ToolCard({
             )}
       </div>
 
-      <p className="mt-6 max-w-2xl leading-relaxed">{tool.shortDescription}</p>
+      <p className="mt-6 max-w-2xl leading-relaxed">{text(tool.shortDescription, sprache)}</p>
 
       {istKauf ? (
         /* Kostenpflichtig: Kauf läuft über die Verkaufsplattform. Dort werden
-           Zahlung, Rechnung, Umsatzsteuer und Auslieferung abgewickelt. */
+           Zahlung, Rechnung, Umsatzsteuer und Auslieferung abgewickelt.
+
+           Ohne Kauf-Link bleibt der Preis trotzdem stehen. Das ist kein
+           Schoenheitsfehler, sondern Absicht: Paddle gibt den Verkauf erst
+           frei, wenn Produkt und Preis öffentlich auf der Seite stehen — der
+           Link entsteht also erst nach der Freigabe. */
         <>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            {tool.kaufUrl && (
+            {tool.kaufUrl ? (
               <a
                 href={tool.kaufUrl}
                 target="_blank"
@@ -87,12 +97,33 @@ export function ToolCard({
                 Kaufen {preis && `— ${preis}`}
                 <span className="sr-only"> (öffnet in neuem Tab)</span>
               </a>
+            ) : (
+              <>
+                <span className="meta rounded-full border border-line px-7 py-3 text-muted">
+                  Verkauf startet in Kürze
+                </span>
+                <Link
+                  href="/contact"
+                  className="meta transition-colors hover:text-accent"
+                >
+                  Bescheid bekommen
+                </Link>
+              </>
             )}
           </div>
 
           <p className="meta mt-4 max-w-lg leading-relaxed">
-            Preis inklusive Mehrwertsteuer. Kauf und Auslieferung laufen über
-            unseren Verkaufspartner, dort siehst du den Endbetrag für dein Land.
+            {preis && "Preis inklusive Mehrwertsteuer. "}Kauf und Auslieferung
+            laufen über Paddle, unseren Verkaufspartner — dort siehst du den
+            Endbetrag für dein Land. Es gelten die{" "}
+            <Link href="/agb" className="underline hover:text-accent">
+              AGB
+            </Link>{" "}
+            und die{" "}
+            <Link href="/rueckgabe" className="underline hover:text-accent">
+              Rückgaberichtlinie
+            </Link>
+            .
           </p>
         </>
       ) : (
@@ -103,7 +134,7 @@ export function ToolCard({
             {downloadUrl && (
               <DownloadButton
                 downloadUrl={downloadUrl}
-                toolName={tool.name}
+                toolName={name}
                 paypalUrl={spendenLink}
               />
             )}
@@ -131,7 +162,7 @@ export function ToolCard({
         <div className="mt-10 max-w-3xl">
           <YouTubeEmbed
             videoId={videoId}
-            title={`${tool.name} — Demo`}
+            title={`${name} — Demo`}
             posterUrl={
               screenshots[0]
                 ? urlFor(screenshots[0]).width(1200).fit("max").auto("format").url()
@@ -148,7 +179,7 @@ export function ToolCard({
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-paper ring-1 ring-line">
                 <Image
                   src={urlFor(bild).width(600).height(450).fit("crop").auto("format").url()}
-                  alt={bild.alt ?? `${tool.name} — Ansicht ${index + 1}`}
+                  alt={bild.alt ?? `${name} — Ansicht ${index + 1}`}
                   fill
                   sizes="(min-width: 768px) 30vw, 45vw"
                   className="object-cover"
@@ -168,7 +199,7 @@ export function ToolCard({
             <span className="hidden group-open:inline">▾ Installationsanleitung ausblenden</span>
           </summary>
           <div className="mt-6 max-w-2xl">
-            <RichText value={tool.installation} />
+            <RichText value={richText(tool.installation, sprache)} />
           </div>
         </details>
       )}

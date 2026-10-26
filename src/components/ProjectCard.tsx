@@ -1,6 +1,6 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
-import { STANDARDSPRACHE, text } from "@/lib/sprache";
+import { pfad, type Sprache, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ProjectCardData } from "@/sanity/lib/types";
 
@@ -16,7 +16,14 @@ import type { ProjectCardData } from "@/sanity/lib/types";
  * Videos sind das vorgesehene Format. GIFs werden weiterhin dargestellt,
  * solange noch welche in der Datenbank liegen.
  */
-export function ProjectCard({ project }: { project: ProjectCardData }) {
+export function ProjectCard({
+  project,
+  sprache,
+}: {
+  project: ProjectCardData;
+  sprache: Sprache;
+}) {
+  const titel = text(project.title, sprache);
   const still = hatBild(project.previewStill)
     ? urlFor(project.previewStill).width(900).fit("max").auto("format").url()
     : null;
@@ -24,19 +31,19 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
   const istVideo = preview?.mimeType?.startsWith("video/") ?? false;
   const alt =
     (project.previewStill as { alt?: string } | null)?.alt?.trim() ||
-    `Vorschau: ${project.title}`;
+    `Vorschau: ${titel}`;
 
   const bildKlassen =
     "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]";
 
   // Rollen in der aktuellen Sprache; fehlt die Übersetzung, greift Deutsch.
   const rollen = (project.roles ?? [])
-    .map((rolle) => text(rolle.name, STANDARDSPRACHE))
+    .map((rolle) => text(rolle.name, sprache))
     .filter((name): name is string => Boolean(name));
 
   return (
     <article>
-      <Link href={`/work/${project.slug}`} className="group block">
+      <Link href={pfad(`/work/${project.slug}`, sprache)} className="group block">
         <div className="relative aspect-video w-full overflow-hidden bg-paper-raised ring-1 ring-line">
           {preview && istVideo ? (
             <video
@@ -74,7 +81,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
         </div>
 
         <h3 className="display mt-4 text-2xl transition-colors group-hover:text-accent">
-          {project.title}
+          {titel}
         </h3>
         {rollen.length > 0 && <p className="meta mt-1">{rollen.join(", ")}</p>}
         <p className="meta mt-1">

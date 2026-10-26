@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+﻿import { defineField, defineType } from "sanity";
 
 /**
  * Website-Einstellungen (Kapitel 5.6 des Lastenhefts).
@@ -19,7 +19,7 @@ export const siteSettings = defineType({
       title: "Startseiten-Statement",
       description:
         "Der große Text-Einstieg auf der Startseite: wer du bist und was du machst.",
-      type: "richText",
+      type: "localizedRichText",
       group: "texts",
     }),
     defineField({
@@ -27,7 +27,7 @@ export const siteSettings = defineType({
       title: "Kurzbiografie (Startseite)",
       description:
         "Erscheint auf der Startseite unter dem Statement. Wer du bist, was du machst, womit du arbeitest — zwei bis fünf Sätze reichen. Der erste Absatz erscheint fett und etwas größer: nach der ersten Zeile einfach Enter drücken. Bleibt das Feld leer, wird der Abschnitt gar nicht angezeigt.",
-      type: "richText",
+      type: "localizedRichText",
       group: "texts",
     }),
     defineField({
@@ -50,7 +50,7 @@ export const siteSettings = defineType({
       name: "softwareIntro",
       title: "Einleitung Software-Bereich",
       description: "Kurzer Text über der Liste der Tools.",
-      type: "richText",
+      type: "localizedRichText",
       group: "texts",
     }),
     defineField({
@@ -58,7 +58,7 @@ export const siteSettings = defineType({
       title: "Text auf der Dankesseite",
       description:
         "Erscheint unter /danke — dorthin leitet PayPal nach einer Spende weiter. Bleibt das Feld leer, wird ein Standardtext angezeigt.",
-      type: "richText",
+      type: "localizedRichText",
       group: "texts",
     }),
 
@@ -77,7 +77,7 @@ export const siteSettings = defineType({
       name: "location",
       title: "Standort / Arbeitsweise",
       description: "Zum Beispiel: „Berlin – remote und vor Ort“.",
-      type: "string",
+      type: "localizedString",
       group: "contact",
     }),
     defineField({
@@ -112,17 +112,15 @@ export const siteSettings = defineType({
       title: "Standard-Seitentitel",
       description:
         "Erscheint im Browser-Tab und in Suchergebnissen, wenn eine Seite keinen eigenen Titel hat.",
-      type: "string",
+      type: "localizedString",
       group: "seo",
     }),
     defineField({
       name: "seoDescription",
       title: "Standard-Beschreibung",
       description: "Kurztext für Suchmaschinen, etwa 150 Zeichen.",
-      type: "text",
-      rows: 3,
+      type: "localizedText",
       group: "seo",
-      validation: (rule) => rule.max(200),
     }),
     defineField({
       name: "ogImage",

@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import { client } from "@/sanity/lib/client";
+import { STANDARDSPRACHE, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import { postsQuery } from "@/sanity/lib/queries";
 import type { PostCardData } from "@/sanity/lib/types";
@@ -66,7 +67,7 @@ export default async function BlogPage() {
                           .url()}
                         alt={
                           (beitrag.coverImage as { alt?: string }).alt ??
-                          beitrag.title
+                          text(beitrag.title, STANDARDSPRACHE)
                         }
                         fill
                         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -79,10 +80,10 @@ export default async function BlogPage() {
                     {datumFormatieren(beitrag.publishedAt)}
                   </p>
                   <h2 className="display mt-2 text-2xl transition-colors group-hover:text-accent">
-                    {beitrag.title}
+                    {text(beitrag.title, STANDARDSPRACHE)}
                   </h2>
                   <p className="mt-3 leading-relaxed text-muted">
-                    {beitrag.excerpt}
+                    {text(beitrag.excerpt, STANDARDSPRACHE)}
                   </p>
                 </Link>
               </article>

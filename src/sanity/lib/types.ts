@@ -1,5 +1,14 @@
-import type { PortableTextBlock } from "@portabletext/react";
+﻿import type { PortableTextBlock } from "@portabletext/react";
 import type { SanityImageSource } from "@sanity/image-url";
+
+/** Ein Textfeld mit deutscher und englischer Fassung. */
+export type LocalizedString = { de?: string | null; en?: string | null } | null;
+
+/** Ein formatierter Text mit deutscher und englischer Fassung. */
+export type LocalizedRichText = {
+  de?: PortableTextBlock[] | null;
+  en?: PortableTextBlock[] | null;
+} | null;
 
 export type SanityImage = SanityImageSource & {
   alt?: string;
@@ -8,7 +17,7 @@ export type SanityImage = SanityImageSource & {
 
 export type Category = {
   _id: string;
-  name: string;
+  name: LocalizedString;
   slug: string;
 };
 
@@ -29,7 +38,7 @@ export type RoleRef = {
 /** Daten für eine Projektkachel in den Übersichten. */
 export type ProjectCardData = {
   _id: string;
-  title: string;
+  title: LocalizedString;
   slug: string;
   client: string;
   agency: string | null;
@@ -41,12 +50,12 @@ export type ProjectCardData = {
 /** Daten für die Projekt-Detailseite. */
 export type ProjectDetail = {
   _id: string;
-  title: string;
+  title: LocalizedString;
   slug: string;
   client: string;
   agency: string | null;
   roles: RoleRef[] | null;
-  description: PortableTextBlock[] | null;
+  description: LocalizedRichText;
   /** "youtube" = eingebettetes YouTube-Video, "loop" = eigenes Loop-Video. */
   medium: "youtube" | "loop" | null;
   youtubeUrl: string | null;
@@ -57,18 +66,18 @@ export type ProjectDetail = {
 };
 
 export type ProjectOrderEntry = {
-  title: string;
+  title: LocalizedString;
   slug: string;
 };
 
 /** Ein Tool im Software-Bereich. */
 export type ToolData = {
   _id: string;
-  name: string;
+  name: LocalizedString;
   slug: string;
-  shortDescription: string;
-  compatibility: string;
-  installation: PortableTextBlock[] | null;
+  shortDescription: LocalizedString;
+  compatibility: LocalizedString;
+  installation: LocalizedRichText;
   demoVideo: string | null;
   /** "kostenlos" = freier Download mit Spendenhinweis, "kauf" = Verkauf über Plattform. */
   vertrieb: "kostenlos" | "kauf" | null;
@@ -90,14 +99,14 @@ export type ToolData = {
 /** Artikel in der Blogübersicht. */
 export type PostCardData = {
   _id: string;
-  title: string;
+  title: LocalizedString;
   slug: string;
-  excerpt: string;
+  excerpt: LocalizedString;
   publishedAt: string;
   coverImage: SanityImage | null;
 };
 
 /** Vollständiger Blogartikel. */
 export type PostDetail = PostCardData & {
-  body: PortableTextBlock[] | null;
+  body: LocalizedRichText;
 };

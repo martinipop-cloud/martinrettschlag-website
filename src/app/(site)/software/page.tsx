@@ -3,9 +3,10 @@ import type { PortableTextBlock } from "@portabletext/react";
 
 import { RichText } from "@/components/RichText";
 import { ToolCard } from "@/components/ToolCard";
+import { richText, STANDARDSPRACHE } from "@/lib/sprache";
 import { client } from "@/sanity/lib/client";
 import { siteSettingsQuery, toolsQuery } from "@/sanity/lib/queries";
-import type { ToolData } from "@/sanity/lib/types";
+import type { ToolData, LocalizedRichText, LocalizedString } from "@/sanity/lib/types";
 
 export const metadata: Metadata = {
   title: "Software",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 type SiteSettings = {
-  softwareIntro: PortableTextBlock[] | null;
+  softwareIntro: LocalizedRichText;
   defaultPaypalUrl: string | null;
 } | null;
 
@@ -39,7 +40,7 @@ export default async function SoftwarePage() {
 
       <div className="mt-10 max-w-2xl text-lg">
         {einstellungen?.softwareIntro ? (
-          <RichText value={einstellungen.softwareIntro} />
+          <RichText value={richText(einstellungen.softwareIntro, STANDARDSPRACHE)} />
         ) : (
           <p className="leading-relaxed text-muted">
             Kleine Helfer aus der täglichen Arbeit. Alle Downloads sind
@@ -59,6 +60,7 @@ export default async function SoftwarePage() {
               <ToolCard
                 tool={tool}
                 standardPaypalLink={einstellungen?.defaultPaypalUrl ?? null}
+                sprache={STANDARDSPRACHE}
               />
             </li>
           ))}

@@ -1,7 +1,10 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * Impressum und Datenschutzerklärung (Kapitel 5.7, F-701).
+ * Impressum, Datenschutzerklärung, AGB und Rückgaberichtlinie (Kapitel 5.7, F-701).
+ *
+ * AGB und Rückgabe kamen mit dem Verkauf dazu: der Zahlungsdienstleister gibt
+ * den Verkauf erst frei, wenn beide Texte öffentlich auf der Seite stehen.
  * Die Texte sind im CMS pflegbar, damit Aktualisierungen ohne Entwickler möglich sind.
  */
 export const legalPage = defineType({
@@ -20,7 +23,7 @@ export const legalPage = defineType({
       name: "slug",
       title: "Adressteil (Slug)",
       description:
-        "Muss „impressum“ oder „datenschutz“ lauten, damit die Seite unter der richtigen Adresse erscheint.",
+        "Muss „impressum“, „datenschutz“, „agb“ oder „rueckgabe“ lauten, damit die Seite unter der richtigen Adresse erscheint.",
       type: "slug",
       options: { source: "title", maxLength: 96 },
       validation: (rule) => rule.required(),
@@ -28,7 +31,9 @@ export const legalPage = defineType({
     defineField({
       name: "content",
       title: "Inhalt",
-      type: "richText",
+      description:
+        "Ohne englische Fassung erscheint auch auf der englischen Seite der deutsche Text. Bei Impressum und Datenschutzerklärung ist die deutsche Fassung ohnehin die rechtlich maßgebliche.",
+      type: "localizedRichText",
       validation: (rule) => rule.required(),
     }),
   ],

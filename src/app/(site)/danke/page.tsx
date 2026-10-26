@@ -3,7 +3,9 @@ import type { PortableTextBlock } from "@portabletext/react";
 import Link from "next/link";
 
 import { RichText } from "@/components/RichText";
+import { richText, STANDARDSPRACHE } from "@/lib/sprache";
 import { client } from "@/sanity/lib/client";
+import type { LocalizedRichText, LocalizedString } from "@/sanity/lib/types";
 import { siteSettingsQuery } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 type SiteSettings = {
-  thankYouText: PortableTextBlock[] | null;
+  thankYouText: LocalizedRichText;
 } | null;
 
 /**
@@ -37,8 +39,10 @@ export default async function DankePage() {
       </h1>
 
       <div className="mt-12 max-w-2xl text-lg">
-        {einstellungen?.thankYouText ? (
-          <RichText value={einstellungen.thankYouText} />
+        {richText(einstellungen?.thankYouText ?? null, STANDARDSPRACHE) ? (
+          <RichText
+            value={richText(einstellungen?.thankYouText ?? null, STANDARDSPRACHE)}
+          />
         ) : (
           <>
             <p className="mb-5 leading-relaxed">

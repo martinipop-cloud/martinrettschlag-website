@@ -3,20 +3,21 @@ import Link from "next/link";
 
 import { HomeStatement } from "@/components/HomeStatement";
 import { ProjectCard } from "@/components/ProjectCard";
+import { richText, STANDARDSPRACHE, text } from "@/lib/sprache";
 import { RichText } from "@/components/RichText";
 import { client } from "@/sanity/lib/client";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import { featuredProjectsQuery, siteSettingsQuery } from "@/sanity/lib/queries";
-import type { ProjectCardData, SanityImage } from "@/sanity/lib/types";
+import type { ProjectCardData, SanityImage, LocalizedRichText, LocalizedString } from "@/sanity/lib/types";
 import type { PortableTextBlock } from "@portabletext/react";
 
 export const revalidate = 60;
 
 type SiteSettings = {
-  homeStatement: PortableTextBlock[] | null;
-  bio: PortableTextBlock[] | null;
+  homeStatement: LocalizedRichText;
+  bio: LocalizedRichText;
   portrait: SanityImage | null;
-  location: string | null;
+  location: LocalizedString;
 } | null;
 
 /**
@@ -35,10 +36,10 @@ export default async function HomePage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <p className="meta leading-relaxed">
             Animation, VFX and Digital Production
-            {einstellungen?.location && (
+            {text(einstellungen?.location ?? null, STANDARDSPRACHE) && (
               <>
                 <br />
-                {einstellungen.location}
+                {text(einstellungen?.location ?? null, STANDARDSPRACHE)}
               </>
             )}
           </p>
@@ -49,10 +50,11 @@ export default async function HomePage() {
             hinterlegt ist. Ohne Statement steht hier eine unsichtbare
             Überschrift: Jede Seite braucht genau eine oberste Überschrift,
             sonst fehlt Suchmaschinen und Screenreadern die Einordnung. */}
-        {einstellungen?.homeStatement &&
-        einstellungen.homeStatement.length > 0 ? (
+        {richText(einstellungen?.homeStatement ?? null, STANDARDSPRACHE) ? (
           <h1 className="display mt-20 text-[clamp(3rem,13vw,12rem)] md:mt-32">
-            <HomeStatement value={einstellungen.homeStatement} />
+            <HomeStatement
+              value={richText(einstellungen?.homeStatement ?? null, STANDARDSPRACHE)}
+            />
           </h1>
         ) : (
           <h1 className="sr-only">
@@ -95,7 +97,7 @@ export default async function HomePage() {
 
               {/* Erster Absatz als Einstieg: fett und etwas größer. */}
               <div className="max-w-2xl text-lg [&>p:first-child]:text-2xl [&>p:first-child]:leading-snug [&>p:first-child]:font-bold">
-                <RichText value={einstellungen.bio} />
+                <RichText value={richText(einstellungen.bio, STANDARDSPRACHE)} />
               </div>
             </div>
           </div>
@@ -118,7 +120,7 @@ export default async function HomePage() {
           <ul className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {projekte.map((projekt) => (
               <li key={projekt._id}>
-                <ProjectCard project={projekt} />
+                <ProjectCard project={projekt} sprache={STANDARDSPRACHE} />
               </li>
             ))}
           </ul>

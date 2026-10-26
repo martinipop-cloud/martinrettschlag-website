@@ -12,17 +12,26 @@ export const category = defineType({
     defineField({
       name: "name",
       title: "Name",
-      description: "Beschriftung des Filter-Buttons, z. B. „Commercial“.",
-      type: "string",
-      validation: (rule) => rule.required(),
+      description:
+        "Beschriftung des Filter-Buttons. Fehlt die englische Fassung, wird die deutsche gezeigt.",
+      type: "localizedString",
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const de = (wert as { de?: string } | undefined)?.de?.trim();
+          return de ? true : "Der deutsche Name wird benötigt.";
+        }),
     }),
     defineField({
       name: "slug",
       title: "Adressteil (Slug)",
       description:
-        "Wird automatisch aus dem Namen erzeugt und taucht im Filter-Link auf.",
+        "Taucht im Filter-Link auf und gilt für beide Sprachen.",
       type: "slug",
-      options: { source: "name", maxLength: 96 },
+      options: {
+        source: (doc: Record<string, unknown>) =>
+          (doc.name as { de?: string } | undefined)?.de ?? "",
+        maxLength: 96,
+      },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -43,10 +52,10 @@ export const category = defineType({
     },
   ],
   preview: {
-    select: { title: "name", subtitle: "order" },
-    prepare: ({ title, subtitle }) => ({
-      title,
-      subtitle: `Position ${subtitle}`,
+    select: { de: "name.de", en: "name.en", order: "order" },
+    prepare: ({ de, en, order }) => ({
+      title: de ?? "(ohne Namen)",
+      subtitle: [en ? `EN: ${en}` : "EN fehlt", `Position ${order}`].join(" · "),
     }),
   },
 });

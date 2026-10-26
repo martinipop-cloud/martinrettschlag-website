@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/ContactForm";
+import { STANDARDSPRACHE, text } from "@/lib/sprache";
 import { client } from "@/sanity/lib/client";
+import type { LocalizedRichText, LocalizedString } from "@/sanity/lib/types";
 import { siteSettingsQuery } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export const revalidate = 60;
 
 type SiteSettings = {
   contactEmail: string | null;
-  location: string | null;
+  location: LocalizedString;
   instagramUrl: string | null;
   youtubeUrl: string | null;
   linkedinUrl: string | null;
@@ -54,10 +56,12 @@ export default async function ContactPage() {
             {email}
           </a>
 
-          {einstellungen?.location && (
+          {text(einstellungen?.location ?? null, STANDARDSPRACHE) && (
             <>
               <h2 className="meta mt-10">Standort</h2>
-              <p className="mt-3 text-lg">{einstellungen.location}</p>
+              <p className="mt-3 text-lg">
+                {text(einstellungen?.location ?? null, STANDARDSPRACHE)}
+              </p>
             </>
           )}
 

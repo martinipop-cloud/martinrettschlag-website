@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { STANDARDSPRACHE } from "@/lib/sprache";
 import { ProjectCard } from "@/components/ProjectCard";
 import { client } from "@/sanity/lib/client";
 import { categoriesQuery, projectsQuery } from "@/sanity/lib/queries";
@@ -38,7 +39,11 @@ export default async function WorkPage({
       <p className="meta">02 — Work</p>
       <h1 className="display mt-6 text-[clamp(2.5rem,9vw,7rem)]">Arbeiten</h1>
 
-      <CategoryFilter categories={kategorien} active={aktiveKategorie} />
+      <CategoryFilter
+        categories={kategorien}
+        active={aktiveKategorie}
+        sprache={STANDARDSPRACHE}
+      />
 
       {projekte.length === 0 ? (
         <p className="mt-16 text-muted">
@@ -51,7 +56,7 @@ export default async function WorkPage({
         <ul className="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {projekte.map((projekt) => (
             <li key={projekt._id}>
-              <ProjectCard project={projekt} />
+              <ProjectCard project={projekt} sprache={STANDARDSPRACHE} />
             </li>
           ))}
         </ul>

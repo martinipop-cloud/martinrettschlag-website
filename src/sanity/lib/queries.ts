@@ -1,4 +1,4 @@
-import { defineQuery } from "next-sanity";
+﻿import { defineQuery } from "next-sanity";
 
 /** Kategorien eines Projekts – immer eine Liste, notfalls leer. */
 const categoriesField = `
@@ -24,7 +24,7 @@ const cardFields = `
  */
 export const projectsQuery = defineQuery(`
   *[_type == "project" && ($kategorie == null || $kategorie in categories[]->slug.current)]
-    | order(order asc, title asc) {
+    | order(order asc, title.de asc) {
     ${cardFields}
   }
 `);
@@ -35,14 +35,14 @@ export const projectsQuery = defineQuery(`
  * Häkchen „Auf Startseite zeigen“ im CMS.
  */
 export const featuredProjectsQuery = defineQuery(`
-  *[_type == "project" && featured == true] | order(order asc, title asc) {
+  *[_type == "project" && featured == true] | order(order asc, title.de asc) {
     ${cardFields}
   }
 `);
 
 /** Kategorien für die Filter-Buttons (F-203). */
 export const categoriesQuery = defineQuery(`
-  *[_type == "category"] | order(order asc, name asc) {
+  *[_type == "category"] | order(order asc, name.de asc) {
     _id, name, "slug": slug.current
   }
 `);
@@ -80,7 +80,7 @@ export const projectBySlugQuery = defineQuery(`
  * das vorherige und nächste Projekt bestimmt (F-307).
  */
 export const projectOrderQuery = defineQuery(`
-  *[_type == "project"] | order(order asc, title asc) {
+  *[_type == "project"] | order(order asc, title.de asc) {
     title, "slug": slug.current
   }
 `);
@@ -92,7 +92,7 @@ export const projectSlugsQuery = defineQuery(`
 
 /** Alle Tools für den Software-Bereich (Kapitel 4.4). */
 export const toolsQuery = defineQuery(`
-  *[_type == "tool"] | order(order asc, name asc) {
+  *[_type == "tool"] | order(order asc, name.de asc) {
     _id,
     name,
     "slug": slug.current,

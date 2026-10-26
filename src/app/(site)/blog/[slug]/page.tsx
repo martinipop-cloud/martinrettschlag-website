@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BlogBody, lesedauerMinuten } from "@/components/BlogBody";
+import { richText, STANDARDSPRACHE, text } from "@/lib/sprache";
 import { client } from "@/sanity/lib/client";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import {
@@ -32,12 +33,15 @@ export async function generateMetadata({
 
   if (!beitrag) return { title: "Artikel nicht gefunden" };
 
+  const titel = text(beitrag.title, STANDARDSPRACHE);
+  const anriss = text(beitrag.excerpt, STANDARDSPRACHE);
+
   return {
-    title: beitrag.title,
-    description: beitrag.excerpt,
+    title: titel,
+    description: anriss,
     openGraph: {
-      title: beitrag.title,
-      description: beitrag.excerpt,
+      title: titel,
+      description: anriss,
       type: "article",
       publishedTime: beitrag.publishedAt,
       images: hatBild(beitrag.coverImage)
@@ -59,6 +63,9 @@ export default async function BlogPostPage({
   ]);
 
   if (!beitrag) notFound();
+
+  const titel = text(beitrag.title, STANDARDSPRACHE);
+  const inhalt = richText(beitrag.body, STANDARDSPRACHE);
 
   // Vorheriger und nächster Artikel für die Navigation am Seitenende –
   // gleiche Reihenfolge wie in der Übersicht, neueste zuerst.
@@ -82,12 +89,10 @@ export default async function BlogPostPage({
       </Link>
 
       <p className="meta mt-8">
-        {datum} · {lesedauerMinuten(beitrag.body)} Min. Lesezeit
+        {datum} · {lesedauerMinuten(inhalt)} Min. Lesezeit
       </p>
 
-      <h1 className="display mt-4 text-[clamp(2rem,6vw,4.5rem)]">
-        {beitrag.title}
-      </h1>
+      <h1 className="display mt-4 text-[clamp(2rem,6vw,4.5rem)]">{titel}</h1>
 
       {hatBild(beitrag.coverImage) && (
         <Image
@@ -96,7 +101,7 @@ export default async function BlogPostPage({
             .fit("max")
             .auto("format")
             .url()}
-          alt={(beitrag.coverImage as { alt?: string }).alt ?? beitrag.title}
+          alt={(beitrag.coverImage as { alt?: string }).alt ?? titel}
           width={1600}
           height={1067}
           priority
@@ -106,7 +111,7 @@ export default async function BlogPostPage({
       )}
 
       <div className="mt-12 text-lg">
-        <BlogBody value={beitrag.body} />
+        <BlogBody value={inhalt} />
       </div>
 
       {(vorheriger || naechster) && (
@@ -119,7 +124,7 @@ export default async function BlogPostPage({
               <Link href={`/blog/${vorheriger.slug}`} className="group block">
                 <span className="meta">← Vorheriger</span>
                 <span className="display mt-2 block text-xl transition-colors group-hover:text-accent">
-                  {vorheriger.title}
+                  {text(vorheriger.title, STANDARDSPRACHE)}
                 </span>
               </Link>
             )}
@@ -129,7 +134,7 @@ export default async function BlogPostPage({
               <Link href={`/blog/${naechster.slug}`} className="group block">
                 <span className="meta">Nächster →</span>
                 <span className="display mt-2 block text-xl transition-colors group-hover:text-accent">
-                  {naechster.title}
+                  {text(naechster.title, STANDARDSPRACHE)}
                 </span>
               </Link>
             )}

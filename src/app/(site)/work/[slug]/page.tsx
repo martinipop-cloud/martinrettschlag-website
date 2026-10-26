@@ -7,7 +7,7 @@ import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
 import { client } from "@/sanity/lib/client";
-import { STANDARDSPRACHE, text } from "@/lib/sprache";
+import { richText, STANDARDSPRACHE, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import {
   projectBySlugQuery,
@@ -63,11 +63,13 @@ export async function generateMetadata({
     .filter(Boolean)
     .join(" — ");
 
+  const titel = text(projekt.title, STANDARDSPRACHE);
+
   return {
-    title: projekt.title,
+    title: titel,
     description: beschreibung || undefined,
     openGraph: {
-      title: projekt.title,
+      title: titel,
       description: beschreibung || undefined,
       images: hatBild(projekt.previewStill)
         ? [urlFor(projekt.previewStill).width(1200).height(630).fit("crop").url()]
@@ -90,6 +92,7 @@ export default async function ProjectDetailPage({
 
   if (!projekt) notFound();
 
+  const titel = text(projekt.title, STANDARDSPRACHE);
   const videoId = getYouTubeId(projekt.youtubeUrl);
   const poster = hatBild(projekt.previewStill)
     ? urlFor(projekt.previewStill).width(1600).fit("max").auto("format").url()
@@ -152,7 +155,7 @@ export default async function ProjectDetailPage({
       </Link>
 
       <h1 className="display mt-8 text-[clamp(2.25rem,7vw,5.5rem)]">
-        {projekt.title}
+        {titel}
       </h1>
 
       <div className="mt-12">
@@ -168,14 +171,14 @@ export default async function ProjectDetailPage({
             loop
             playsInline
             preload="metadata"
-            aria-label={`${projekt.title} — Videoschleife`}
+            aria-label={`${titel} — Videoschleife`}
           >
             <source src={projekt.loop.url} type={projekt.loop.mimeType ?? "video/mp4"} />
           </video>
         ) : videoId ? (
           <YouTubeEmbed
             videoId={videoId}
-            title={projekt.title}
+            title={titel}
             posterUrl={poster}
           />
         ) : (
@@ -218,7 +221,7 @@ export default async function ProjectDetailPage({
                     href={`/work?kategorie=${kategorie.slug}`}
                     className="transition-colors hover:text-accent"
                   >
-                    {kategorie.name}
+                    {text(kategorie.name, STANDARDSPRACHE)}
                   </Link>
                 </span>
               ))}
@@ -227,9 +230,9 @@ export default async function ProjectDetailPage({
         )}
       </dl>
 
-      {projekt.description && (
+      {richText(projekt.description, STANDARDSPRACHE) && (
         <div className="mt-12 max-w-2xl text-lg">
-          <RichText value={projekt.description} />
+          <RichText value={richText(projekt.description, STANDARDSPRACHE)} />
         </div>
       )}
 
@@ -245,7 +248,7 @@ export default async function ProjectDetailPage({
               <Link href={`/work/${vorheriges.slug}`} className="group block">
                 <span className="meta">← Vorheriges</span>
                 <span className="display mt-2 block text-xl transition-colors group-hover:text-accent">
-                  {vorheriges.title}
+                  {text(vorheriges.title, STANDARDSPRACHE)}
                 </span>
               </Link>
             )}
@@ -255,7 +258,7 @@ export default async function ProjectDetailPage({
               <Link href={`/work/${naechstes.slug}`} className="group block">
                 <span className="meta">Nächstes →</span>
                 <span className="display mt-2 block text-xl transition-colors group-hover:text-accent">
-                  {naechstes.title}
+                  {text(naechstes.title, STANDARDSPRACHE)}
                 </span>
               </Link>
             )}

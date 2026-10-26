@@ -1,5 +1,6 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
+import { pfad, type Sprache, text } from "@/lib/sprache";
 import type { Category } from "@/sanity/lib/types";
 
 /**
@@ -13,9 +14,11 @@ import type { Category } from "@/sanity/lib/types";
 export function CategoryFilter({
   categories,
   active,
+  sprache,
 }: {
   categories: Category[];
   active: string | null;
+  sprache: Sprache;
 }) {
   if (categories.length === 0) return null;
 
@@ -27,7 +30,7 @@ export function CategoryFilter({
           return (
             <li key={entry.slug}>
               <Link
-                href={`/work?kategorie=${entry.slug}`}
+                href={pfad(`/work?kategorie=${entry.slug}`, sprache)}
                 aria-current={isActive ? "true" : undefined}
                 className={`meta inline-block rounded-full border px-4 py-2 transition-colors ${
                   isActive
@@ -35,7 +38,7 @@ export function CategoryFilter({
                     : "border-line hover:border-accent hover:text-accent"
                 }`}
               >
-                {entry.name}
+                {text(entry.name, sprache)}
               </Link>
             </li>
           );

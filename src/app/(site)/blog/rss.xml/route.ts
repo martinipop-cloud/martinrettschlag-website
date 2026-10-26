@@ -1,5 +1,6 @@
-import { siteUrl } from "@/lib/site";
+﻿import { siteUrl } from "@/lib/site";
 import { client } from "@/sanity/lib/client";
+import { STANDARDSPRACHE, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import { postsQuery } from "@/sanity/lib/queries";
 import type { PostCardData } from "@/sanity/lib/types";
@@ -37,11 +38,11 @@ export async function GET() {
 
       return [
         "    <item>",
-        `      <title>${xml(beitrag.title)}</title>`,
+        `      <title>${xml(text(beitrag.title, STANDARDSPRACHE))}</title>`,
         `      <link>${xml(adresse)}</link>`,
         `      <guid isPermaLink="true">${xml(adresse)}</guid>`,
         `      <pubDate>${new Date(beitrag.publishedAt).toUTCString()}</pubDate>`,
-        `      <description>${xml(beitrag.excerpt)}</description>`,
+        `      <description>${xml(text(beitrag.excerpt, STANDARDSPRACHE))}</description>`,
         bild ? `      <enclosure url="${xml(bild)}" type="image/jpeg" />` : "",
         "    </item>",
       ]

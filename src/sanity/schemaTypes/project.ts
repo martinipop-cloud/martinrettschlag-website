@@ -21,18 +21,29 @@ export const project = defineType({
     defineField({
       name: "title",
       title: "Titel",
-      type: "string",
+      description:
+        "Fehlt die englische Fassung, erscheint auf der englischen Seite der deutsche Titel.",
+      type: "localizedString",
       group: "content",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const de = (wert as { de?: string } | undefined)?.de?.trim();
+          return de ? true : "Der deutsche Titel wird benötigt.";
+        }),
     }),
     defineField({
       name: "slug",
       title: "Adressteil (Slug)",
       description:
-        "Bildet die Adresse der Projektseite, z. B. /work/mein-projekt. Wird aus dem Titel erzeugt.",
+        "Bildet die Adresse der Projektseite, z. B. /work/mein-projekt. Gilt für beide Sprachen — die englische Fassung liegt unter /en/work/… .",
       type: "slug",
       group: "content",
-      options: { source: "title", maxLength: 96 },
+      options: {
+        // Aus dem deutschen Titel, weil Deutsch die Grundsprache ist.
+        source: (doc: Record<string, unknown>) =>
+          (doc.title as { de?: string } | undefined)?.de ?? "",
+        maxLength: 96,
+      },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -80,7 +91,9 @@ export const project = defineType({
     defineField({
       name: "description",
       title: "Beschreibung",
-      type: "richText",
+      description:
+        "Fehlt die englische Fassung, erscheint auf der englischen Seite der deutsche Text.",
+      type: "localizedRichText",
       group: "content",
     }),
     defineField({
@@ -229,14 +242,19 @@ export const project = defineType({
   ],
   preview: {
     select: {
-      title: "title",
+      titleDe: "title.de",
+      titleEn: "title.en",
       client: "client",
       featured: "featured",
       media: "previewStill",
     },
-    prepare: ({ title, client, featured, media }) => ({
-      title,
-      subtitle: [client, featured ? "★ Startseite" : null]
+    prepare: ({ titleDe, titleEn, client, featured, media }) => ({
+      title: titleDe ?? titleEn ?? "(ohne Titel)",
+      subtitle: [
+        client,
+        featured ? "★ Startseite" : null,
+        titleEn ? null : "EN fehlt",
+      ]
         .filter(Boolean)
         .join(" · "),
       media,
