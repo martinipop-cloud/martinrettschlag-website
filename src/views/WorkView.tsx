@@ -1,5 +1,6 @@
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ProjectCard } from "@/components/ProjectCard";
+import { ProjectGrid } from "@/components/ProjectGrid";
 import type { Sprache } from "@/lib/sprache";
 import { texte } from "@/lib/texte";
 import { client } from "@/sanity/lib/client";
@@ -46,14 +47,22 @@ export async function WorkView({
           {aktiveKategorie ? t.keineProjekteKategorie : t.keineProjekte}
         </p>
       ) : (
-        /* Raster: 3 Spalten Desktop, 2 Tablet, 1 Smartphone (F-201, F-817). */
-        <ul className="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        /* Raster: 3 Spalten Desktop, 2 Tablet, 1 Smartphone (F-201, F-817).
+           Die Kacheln werden hier auf dem Server gebaut und vom Raster nur
+           portionsweise in die Seite gestellt (N-04). */
+        <ProjectGrid
+          // Neue Kategorie heißt: Zählung wieder bei den ersten Kacheln
+          // beginnen, statt den Stand der vorigen Kategorie zu übernehmen.
+          key={aktiveKategorie ?? "alle"}
+          mehrLaden={t.mehrLaden}
+          rasterKlassen="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {projekte.map((projekt) => (
             <li key={projekt._id}>
               <ProjectCard project={projekt} sprache={sprache} />
             </li>
           ))}
-        </ul>
+        </ProjectGrid>
       )}
     </section>
   );

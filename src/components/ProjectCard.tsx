@@ -1,6 +1,8 @@
 ﻿import Link from "next/link";
 
+import { ProjectPreview } from "@/components/ProjectPreview";
 import { pfad, type Sprache, text } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ProjectCardData } from "@/sanity/lib/types";
 
@@ -31,10 +33,7 @@ export function ProjectCard({
   const istVideo = preview?.mimeType?.startsWith("video/") ?? false;
   const alt =
     (project.previewStill as { alt?: string } | null)?.alt?.trim() ||
-    `Vorschau: ${titel}`;
-
-  const bildKlassen =
-    "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]";
+    `${texte(sprache).vorschau}: ${titel}`;
 
   // Rollen in der aktuellen Sprache; fehlt die Übersetzung, greift Deutsch.
   const rollen = (project.roles ?? [])
@@ -44,41 +43,13 @@ export function ProjectCard({
   return (
     <article>
       <Link href={pfad(`/work/${project.slug}`, sprache)} className="group block">
-        <div className="relative aspect-video w-full overflow-hidden bg-paper-raised ring-1 ring-line">
-          {preview && istVideo ? (
-            <video
-              className={bildKlassen}
-              // Standbild überbrückt die Zeit, bis das Video bereit ist.
-              poster={still ?? undefined}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label={alt}
-            >
-              <source src={preview.url} type={preview.mimeType ?? undefined} />
-            </video>
-          ) : preview ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={preview.url}
-              alt={alt}
-              loading="lazy"
-              decoding="async"
-              className={bildKlassen}
-            />
-          ) : still ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={still}
-              alt={alt}
-              loading="lazy"
-              decoding="async"
-              className={bildKlassen}
-            />
-          ) : null}
-        </div>
+        <ProjectPreview
+          videoUrl={preview && istVideo ? preview.url : null}
+          mimeType={preview?.mimeType ?? null}
+          bildUrl={preview && !istVideo ? preview.url : null}
+          stillUrl={still}
+          alt={alt}
+        />
 
         <h3 className="display mt-4 text-2xl transition-colors group-hover:text-accent">
           {titel}
