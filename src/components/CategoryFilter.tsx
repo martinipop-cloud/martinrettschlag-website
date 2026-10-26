@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 
 import { pfad, type Sprache, text } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 import type { Category } from "@/sanity/lib/types";
 
 /**
@@ -23,7 +24,7 @@ export function CategoryFilter({
   if (categories.length === 0) return null;
 
   return (
-    <nav aria-label="Projekte nach Kategorie filtern" className="mt-8">
+    <nav aria-label={texte(sprache).nachKategorieFiltern} className="mt-8">
       <ul className="flex flex-wrap gap-2">
         {categories.map((entry) => {
           const isActive = entry.slug === active;
