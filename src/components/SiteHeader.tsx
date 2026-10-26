@@ -28,7 +28,10 @@ export function SiteHeader({ sprache }: { sprache: Sprache }) {
   const navigation = [
     { ziel: "/work", label: t.navWork },
     { ziel: "/software", label: t.navSoftware },
-    { ziel: "/blog", label: t.navBlog },
+    // „What I Like“ ist aus der Navigation genommen: Der Bereich wird durch
+    // eine eigene Seite ersetzt. Die Artikel unter /blog bleiben vorerst
+    // erreichbar, sind aber nicht mehr verlinkt und nicht mehr im
+    // Seitenverzeichnis für Suchmaschinen.
     { ziel: "/trust-me", label: t.navTrustMe },
     { ziel: "/contact", label: t.navContact },
   ];

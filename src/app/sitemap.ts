@@ -6,9 +6,11 @@ import { client } from "@/sanity/lib/client";
 /**
  * Verzeichnis aller Seiten für Suchmaschinen (N-12).
  *
- * Projekte und Blogartikel werden aus dem CMS gelesen, damit neue Inhalte
- * automatisch aufgenommen werden. Nicht enthalten sind das Studio, die
- * Schnittstellen und die Dankesseite — sie gehören nicht in Suchergebnisse.
+ * Die Projekte werden aus dem CMS gelesen, damit neue Inhalte automatisch
+ * aufgenommen werden. Nicht enthalten sind das Studio, die Schnittstellen und
+ * die Dankesseite — sie gehören nicht in Suchergebnisse. Ebenfalls nicht
+ * enthalten ist „What I Like“ (/blog): Der Bereich ist aus der Navigation
+ * genommen und wird durch eine eigene Seite ersetzt.
  *
  * Jede Seite steht zweimal drin: deutsch an der Wurzel, englisch unter /en.
  * Dazu nennt jeder Eintrag über „alternates“ die jeweils andere Fassung, damit
@@ -42,18 +44,11 @@ function beideSprachen(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projekte, artikel] = await Promise.all([
-    client.fetch<Eintrag[]>(
-      `*[_type == "project" && defined(slug.current)]{
-        "slug": slug.current, "aktualisiert": _updatedAt
-      }`,
-    ),
-    client.fetch<Eintrag[]>(
-      `*[_type == "post" && defined(slug.current)]{
-        "slug": slug.current, "aktualisiert": _updatedAt
-      }`,
-    ),
-  ]);
+  const projekte = await client.fetch<Eintrag[]>(
+    `*[_type == "project" && defined(slug.current)]{
+      "slug": slug.current, "aktualisiert": _updatedAt
+    }`,
+  );
 
   const jetzt = new Date();
 
@@ -61,7 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...beideSprachen("/", { lastModified: jetzt, changeFrequency: "monthly", priority: 1 }),
     ...beideSprachen("/work", { lastModified: jetzt, changeFrequency: "monthly", priority: 0.9 }),
     ...beideSprachen("/software", { lastModified: jetzt, changeFrequency: "monthly", priority: 0.8 }),
-    ...beideSprachen("/blog", { lastModified: jetzt, changeFrequency: "weekly", priority: 0.7 }),
     ...beideSprachen("/trust-me", { lastModified: jetzt, changeFrequency: "monthly", priority: 0.6 }),
     ...beideSprachen("/contact", { lastModified: jetzt, changeFrequency: "yearly", priority: 0.6 }),
     ...beideSprachen("/impressum", { lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 }),
@@ -78,13 +72,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(p.aktualisiert),
         changeFrequency: "monthly",
         priority: 0.8,
-      }),
-    ),
-    ...artikel.flatMap((a) =>
-      beideSprachen(`/blog/${a.slug}`, {
-        lastModified: new Date(a.aktualisiert),
-        changeFrequency: "monthly",
-        priority: 0.6,
       }),
     ),
   ];

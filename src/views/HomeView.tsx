@@ -79,25 +79,28 @@ export async function HomeView({ sprache }: { sprache: Sprache }) {
             <div
               className={`mt-8 gap-10 ${
                 hatBild(portrait)
-                  ? "grid grid-cols-1 md:grid-cols-[280px_1fr] md:gap-16"
+                  ? "grid grid-cols-1 md:grid-cols-[140px_1fr] md:gap-16"
                   : ""
               }`}
             >
               {hatBild(portrait) && (
                 <Image
                   src={urlFor(portrait)
-                    .width(560)
-                    .height(700)
+                    .width(420)
+                    .height(525)
                     .fit("crop")
                     .auto("format")
                     .url()}
                   alt={
                     (portrait as { alt?: string }).alt ?? "Martin Rettschlag"
                   }
-                  width={560}
-                  height={700}
-                  sizes="(min-width: 768px) 280px, 100vw"
-                  className="h-auto w-full ring-1 ring-line"
+                  width={420}
+                  height={525}
+                  /* Auf dem Rechner füllt das Bild die 140 Pixel breite
+                     Spalte. Auf dem Handy gibt es keine Spalte, dort begrenzt
+                     w-1/2 es auf die halbe Breite — sonst nähme es die ganze. */
+                  sizes="(min-width: 768px) 140px, 50vw"
+                  className="h-auto w-1/2 ring-1 ring-line md:w-full"
                 />
               )}
 
