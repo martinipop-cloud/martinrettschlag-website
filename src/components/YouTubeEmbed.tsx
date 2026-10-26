@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import type { Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
+
 /**
  * Datenschutzfreundliche YouTube-Einbettung (F-309, R-06).
  *
@@ -16,10 +19,12 @@ export function YouTubeEmbed({
   videoId,
   title,
   posterUrl,
+  sprache,
 }: {
   videoId: string;
   title: string;
   posterUrl: string | null;
+  sprache: Sprache;
 }) {
   const [aktiviert, setAktiviert] = useState(false);
 
@@ -66,7 +71,7 @@ export function YouTubeEmbed({
           </svg>
         </span>
         <span className="meta max-w-md px-6 text-center !text-white/90">
-          Video starten — dabei wird eine Verbindung zu YouTube aufgebaut
+          {texte(sprache).videoStarten}
         </span>
       </span>
     </button>

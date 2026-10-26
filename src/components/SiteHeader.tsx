@@ -4,25 +4,34 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { ThemeToggle } from "./ThemeToggle";
+import {
+  andereSprache,
+  ohneSprache,
+  pfad,
+  type Sprache,
+} from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 
-const navigation = [
-  { href: "/work", label: "Work" },
-  { href: "/software", label: "Software" },
-  { href: "/blog", label: "What I Like" },
-  { href: "/trust-me", label: "Trust me" },
-  { href: "/contact", label: "Contact" },
-];
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * Dauerhaft sichtbare Navigationsleiste (F-809 bis F-812).
  * Bleibt beim Scrollen am oberen Rand stehen und grenzt sich dort
  * sichtbar vom darunterliegenden Inhalt ab.
  */
-export function SiteHeader() {
+export function SiteHeader({ sprache }: { sprache: Sprache }) {
+  const t = texte(sprache);
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navigation = [
+    { ziel: "/work", label: t.navWork },
+    { ziel: "/software", label: t.navSoftware },
+    { ziel: "/blog", label: t.navBlog },
+    { ziel: "/trust-me", label: t.navTrustMe },
+    { ziel: "/contact", label: t.navContact },
+  ];
 
   useEffect(() => {
     function onScroll() {
@@ -38,9 +47,17 @@ export function SiteHeader() {
     setMenuOpen(false);
   }, [pathname]);
 
-  function isActive(href: string) {
+  function isActive(ziel: string) {
+    const href = pfad(ziel, sprache);
     return pathname === href || pathname.startsWith(`${href}/`);
   }
+
+  // Der Umschalter führt auf dieselbe Seite in der anderen Sprache. Nur die
+  // Startseite kennt keinen eigenen Pfad, deshalb wird dort auf „/“ gewechselt.
+  const zweite = andereSprache(sprache);
+  const umschalterZiel = pfad(ohneSprache(pathname), zweite);
+  const umschalterLabel =
+    zweite === "de" ? texte(zweite).spracheDeutsch : texte(zweite).spracheEnglisch;
 
   return (
     <header
@@ -50,23 +67,26 @@ export function SiteHeader() {
           : "border-b border-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-6 px-5 md:px-10">
+      {/* Auf dem Handy stehen hier drei Schaltflächen neben dem Namenszug.
+          Deshalb engere Abstände als auf dem Rechner, damit der Name in einer
+          Zeile bleibt. */}
+      <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-3 px-5 md:gap-6 md:px-10">
         <Link
-          href="/"
-          className="display text-base leading-none tracking-tight md:text-lg"
+          href={pfad("/", sprache)}
+          className="display text-sm leading-none tracking-tight whitespace-nowrap sm:text-base md:text-lg"
         >
           Martin Rettschlag
         </Link>
 
-        <nav aria-label="Hauptnavigation" className="hidden md:block">
+        <nav aria-label={t.hauptnavigation} className="hidden md:block">
           <ul className="flex items-center gap-8">
             {navigation.map((item) => (
-              <li key={item.href}>
+              <li key={item.ziel}>
                 <Link
-                  href={item.href}
-                  aria-current={isActive(item.href) ? "page" : undefined}
+                  href={pfad(item.ziel, sprache)}
+                  aria-current={isActive(item.ziel) ? "page" : undefined}
                   className={`meta transition-colors hover:text-accent ${
-                    isActive(item.href) ? "text-accent" : ""
+                    isActive(item.ziel) ? "text-accent" : ""
                   }`}
                 >
                   {item.label}
@@ -76,16 +96,30 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Sprachumschalter. Zeigt die Sprache, in die gewechselt wird —
+              nicht die aktuelle. hrefLang und lang sagen Browsern und
+              Screenreadern, dass das Ziel in der anderen Sprache ist. */}
+          <Link
+            href={umschalterZiel}
+            hrefLang={zweite}
+            lang={zweite}
+            aria-label={`${t.spracheWechseln}: ${umschalterLabel}`}
+            className="meta rounded-full border border-line px-2.5 py-1.5 transition-colors hover:border-accent hover:text-accent md:px-3"
+          >
+            {zweite.toUpperCase()}
+          </Link>
+
+          <ThemeToggle sprache={sprache} />
+
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
-            className="meta cursor-pointer rounded-full border border-line px-3 py-1.5 md:hidden"
+            className="meta cursor-pointer rounded-full border border-line px-2.5 py-1.5 md:hidden"
           >
-            {menuOpen ? "Schliessen" : "Menü"}
+            {menuOpen ? t.menueSchliessen : t.menueOeffnen}
           </button>
         </div>
       </div>
@@ -94,17 +128,17 @@ export function SiteHeader() {
       {menuOpen && (
         <nav
           id="mobile-navigation"
-          aria-label="Hauptnavigation"
+          aria-label={t.hauptnavigation}
           className="border-t border-line bg-paper md:hidden"
         >
           <ul className="flex flex-col px-5 py-4">
             {navigation.map((item) => (
-              <li key={item.href}>
+              <li key={item.ziel}>
                 <Link
-                  href={item.href}
-                  aria-current={isActive(item.href) ? "page" : undefined}
+                  href={pfad(item.ziel, sprache)}
+                  aria-current={isActive(item.ziel) ? "page" : undefined}
                   className={`display block py-3 text-3xl ${
-                    isActive(item.href) ? "text-accent" : ""
+                    isActive(item.ziel) ? "text-accent" : ""
                   }`}
                 >
                   {item.label}

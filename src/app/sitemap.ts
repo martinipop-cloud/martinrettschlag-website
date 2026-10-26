@@ -9,10 +9,37 @@ import { client } from "@/sanity/lib/client";
  * Projekte und Blogartikel werden aus dem CMS gelesen, damit neue Inhalte
  * automatisch aufgenommen werden. Nicht enthalten sind das Studio, die
  * Schnittstellen und die Dankesseite — sie gehören nicht in Suchergebnisse.
+ *
+ * Jede Seite steht zweimal drin: deutsch an der Wurzel, englisch unter /en.
+ * Dazu nennt jeder Eintrag über „alternates“ die jeweils andere Fassung, damit
+ * Suchmaschinen beide als dasselbe Dokument in zwei Sprachen erkennen und
+ * nicht als doppelten Inhalt bewerten.
  */
 export const revalidate = 3600;
 
 type Eintrag = { slug: string; aktualisiert: string };
+
+/** Erzeugt beide Sprachfassungen einer Adresse, gegenseitig verknüpft. */
+function beideSprachen(
+  ziel: string,
+  optionen: {
+    lastModified: Date;
+    changeFrequency: "yearly" | "monthly" | "weekly";
+    priority: number;
+  },
+): MetadataRoute.Sitemap {
+  const sauber = ziel === "/" ? "" : ziel;
+  const de = `${siteUrl}${sauber || "/"}`;
+  const en = `${siteUrl}/en${sauber}`;
+  // „x-default“ benennt die Fassung für alle übrigen Sprachen: Englisch,
+  // weil es international weiter verständlich ist als Deutsch.
+  const alternates = { languages: { de, en, "x-default": en } };
+
+  return [
+    { url: de, ...optionen, alternates },
+    { url: en, ...optionen, alternates },
+  ];
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [projekte, artikel] = await Promise.all([
@@ -31,29 +58,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const jetzt = new Date();
 
   const feste: MetadataRoute.Sitemap = [
-    { url: `${siteUrl}/`, lastModified: jetzt, changeFrequency: "monthly", priority: 1 },
-    { url: `${siteUrl}/work`, lastModified: jetzt, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${siteUrl}/software`, lastModified: jetzt, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/blog`, lastModified: jetzt, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${siteUrl}/trust-me`, lastModified: jetzt, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${siteUrl}/contact`, lastModified: jetzt, changeFrequency: "yearly", priority: 0.6 },
-    { url: `${siteUrl}/impressum`, lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${siteUrl}/datenschutz`, lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 },
+    ...beideSprachen("/", { lastModified: jetzt, changeFrequency: "monthly", priority: 1 }),
+    ...beideSprachen("/work", { lastModified: jetzt, changeFrequency: "monthly", priority: 0.9 }),
+    ...beideSprachen("/software", { lastModified: jetzt, changeFrequency: "monthly", priority: 0.8 }),
+    ...beideSprachen("/blog", { lastModified: jetzt, changeFrequency: "weekly", priority: 0.7 }),
+    ...beideSprachen("/trust-me", { lastModified: jetzt, changeFrequency: "monthly", priority: 0.6 }),
+    ...beideSprachen("/contact", { lastModified: jetzt, changeFrequency: "yearly", priority: 0.6 }),
+    ...beideSprachen("/impressum", { lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 }),
+    ...beideSprachen("/datenschutz", { lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 }),
+    // AGB und Rückgabe liegen nur auf Deutsch vor.
+    { url: `${siteUrl}/agb`, lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${siteUrl}/rueckgabe`, lastModified: jetzt, changeFrequency: "yearly", priority: 0.2 },
   ];
 
   return [
     ...feste,
-    ...projekte.map((p) => ({
-      url: `${siteUrl}/work/${p.slug}`,
-      lastModified: new Date(p.aktualisiert),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    ...artikel.map((a) => ({
-      url: `${siteUrl}/blog/${a.slug}`,
-      lastModified: new Date(a.aktualisiert),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
+    ...projekte.flatMap((p) =>
+      beideSprachen(`/work/${p.slug}`, {
+        lastModified: new Date(p.aktualisiert),
+        changeFrequency: "monthly",
+        priority: 0.8,
+      }),
+    ),
+    ...artikel.flatMap((a) =>
+      beideSprachen(`/blog/${a.slug}`, {
+        lastModified: new Date(a.aktualisiert),
+        changeFrequency: "monthly",
+        priority: 0.6,
+      }),
+    ),
   ];
 }

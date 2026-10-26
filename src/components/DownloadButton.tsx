@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import type { Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
+
 /**
  * Download-Schaltfläche mit anschließendem Spendenhinweis (F-404, F-405).
  *
@@ -18,11 +21,14 @@ export function DownloadButton({
   downloadUrl,
   toolName,
   paypalUrl,
+  sprache,
 }: {
   downloadUrl: string;
   toolName: string;
   paypalUrl: string | null;
+  sprache: Sprache;
 }) {
+  const t = texte(sprache);
   const [offen, setOffen] = useState(false);
   const schliessenRef = useRef<HTMLButtonElement>(null);
 
@@ -58,7 +64,7 @@ export function DownloadButton({
         onClick={() => setOffen(true)}
         className="meta rounded-full border border-accent bg-accent px-7 py-3 !text-accent-contrast transition-opacity hover:opacity-85"
       >
-        Herunterladen
+        {t.herunterladen}
       </a>
 
       {offen && (
@@ -73,24 +79,21 @@ export function DownloadButton({
             onClick={(event) => event.stopPropagation()}
             className="relative w-full max-w-lg border border-line bg-paper p-8 md:p-10"
           >
-            <p className="meta">Download läuft</p>
+            <p className="meta">{t.downloadLaeuft}</p>
 
             <h2
               id="spenden-titel"
               className="display mt-4 text-[clamp(2rem,7vw,3.5rem)]"
             >
-              Danke<span className="script">schön</span>
+              {t.dankeKopf}
+              <span className="script">{t.dankeKopfAkzent}</span>
             </h2>
 
             <p className="mt-6 leading-relaxed">
-              <strong>{toolName}</strong> wird gerade geladen.
+              <strong>{toolName}</strong> {t.downloadLaeuftText}
             </p>
 
-            <p className="mt-4 leading-relaxed text-muted">
-              Wenn du willst, dass noch mehr solcher Tools entstehen: Genau
-              dafür sind Spenden da. Sie kaufen mir die Zeit frei, neue zu
-              bauen.
-            </p>
+            <p className="mt-4 leading-relaxed text-muted">{t.mehrToolsText}</p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               {paypalUrl && (
@@ -101,8 +104,8 @@ export function DownloadButton({
                   onClick={schliessen}
                   className="meta rounded-full border border-accent bg-accent px-7 py-3 !text-accent-contrast transition-opacity hover:opacity-85"
                 >
-                  Spenden über PayPal
-                  <span className="sr-only"> (öffnet in neuem Tab)</span>
+                  {t.spendenPayPal}
+                  <span className="sr-only"> {t.oeffnetNeuerTab}</span>
                 </a>
               )}
               <button
@@ -111,7 +114,7 @@ export function DownloadButton({
                 onClick={schliessen}
                 className="meta cursor-pointer rounded-full border border-line px-7 py-3 transition-colors hover:border-accent hover:text-accent"
               >
-                Vielleicht später
+                {t.vielleichtSpaeter}
               </button>
             </div>
           </div>

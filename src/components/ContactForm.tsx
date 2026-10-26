@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { pfad, type Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
+
 type Zustand = "bereit" | "sendet" | "gesendet";
 
 const feldKlassen =
@@ -14,7 +17,14 @@ const feldKlassen =
  * Datenverarbeitung ist verpflichtend, und ein für Menschen unsichtbares
  * Feld hält einfache Bots ab.
  */
-export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
+export function ContactForm({
+  kontaktEmail,
+  sprache,
+}: {
+  kontaktEmail: string;
+  sprache: Sprache;
+}) {
+  const t = texte(sprache);
   const [zustand, setZustand] = useState<Zustand>("bereit");
   const [fehler, setFehler] = useState<string | null>(null);
 
@@ -36,22 +46,23 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
           message: formular.get("message"),
           consent: formular.get("consent") === "on",
           website: formular.get("website"),
+          // Damit die Schnittstelle in derselben Sprache antwortet,
+          // in der das Formular angezeigt wird.
+          sprache,
         }),
       });
 
       const ergebnis = await antwort.json();
 
       if (!antwort.ok) {
-        setFehler(ergebnis?.fehler ?? "Es ist ein Fehler aufgetreten.");
+        setFehler(ergebnis?.fehler ?? t.fehlerAllgemein);
         setZustand("bereit");
         return;
       }
 
       setZustand("gesendet");
     } catch {
-      setFehler(
-        `Die Verbindung ist fehlgeschlagen. Bitte schreib direkt an ${kontaktEmail}.`,
-      );
+      setFehler(`${t.verbindungFehlgeschlagen} ${kontaktEmail}.`);
       setZustand("bereit");
     }
   }
@@ -63,10 +74,8 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
         role="status"
         className="border border-accent bg-paper-raised p-8 md:p-10"
       >
-        <p className="display text-2xl">Danke für deine Nachricht.</p>
-        <p className="mt-4 text-muted">
-          Die Anfrage ist angekommen. Ich melde mich so bald wie möglich.
-        </p>
+        <p className="display text-2xl">{t.dankeNachricht}</p>
+        <p className="mt-4 text-muted">{t.dankeNachrichtText}</p>
       </div>
     );
   }
@@ -76,14 +85,14 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
       {/* Honeypot – für Menschen unsichtbar, aber nicht per display:none,
           damit Bots ihn im Quelltext finden und ausfüllen (F-607). */}
       <div aria-hidden="true" className="absolute left-[-9999px] w-px">
-        <label htmlFor="website">Website (bitte frei lassen)</label>
+        <label htmlFor="website">{t.honeypotLabel}</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className="meta">
-            Name *
+            {t.name} *
           </label>
           <input
             id="name"
@@ -98,7 +107,7 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
 
         <div>
           <label htmlFor="email" className="meta">
-            E-Mail *
+            {t.email} *
           </label>
           <input
             id="email"
@@ -114,7 +123,7 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
 
       <div className="mt-6">
         <label htmlFor="subject" className="meta">
-          Betreff *
+          {t.betreff} *
         </label>
         <input
           id="subject"
@@ -128,7 +137,7 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
 
       <div className="mt-6">
         <label htmlFor="message" className="meta">
-          Nachricht *
+          {t.nachricht} *
         </label>
         <textarea
           id="message"
@@ -149,13 +158,12 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
           className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
         />
         <label htmlFor="consent" className="text-sm leading-relaxed text-muted">
-          Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der
-          Anfrage gespeichert werden. Weitere Hinweise in der{" "}
+          {t.einwilligung}{" "}
           <Link
-            href="/datenschutz"
+            href={pfad("/datenschutz", sprache)}
             className="text-accent underline underline-offset-4"
           >
-            Datenschutzerklärung
+            {t.datenschutzerklaerung}
           </Link>
           . *
         </label>
@@ -172,10 +180,10 @@ export function ContactForm({ kontaktEmail }: { kontaktEmail: string }) {
         disabled={zustand === "sendet"}
         className="meta mt-8 cursor-pointer rounded-full border border-accent bg-accent px-8 py-3 !text-accent-contrast transition-opacity hover:opacity-85 disabled:cursor-wait disabled:opacity-60"
       >
-        {zustand === "sendet" ? "Wird gesendet …" : "Nachricht senden"}
+        {zustand === "sendet" ? t.wirdGesendet : t.nachrichtSenden}
       </button>
 
-      <p className="meta mt-4">* Pflichtfeld</p>
+      <p className="meta mt-4">{t.pflichtfeld}</p>
     </form>
   );
 }

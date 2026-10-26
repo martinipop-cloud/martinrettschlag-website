@@ -49,3 +49,19 @@ export function pfad(ziel: string, sprache: Sprache): string {
   if (sprache === STANDARDSPRACHE) return sauber;
   return sauber === "/" ? "/en" : `/en${sauber}`;
 }
+
+/**
+ * Entfernt den Sprachvorsatz aus einer Adresse.
+ * „/en/work/xy“ wird zu „/work/xy“, „/en“ zu „/“. Deutsche Adressen haben
+ * keinen Vorsatz und bleiben unverändert.
+ */
+export function ohneSprache(adresse: string): string {
+  if (adresse === "/en") return "/";
+  if (adresse.startsWith("/en/")) return adresse.slice(3);
+  return adresse;
+}
+
+/** Die jeweils andere Sprache — für den Umschalter im Kopfbereich. */
+export function andereSprache(sprache: Sprache): Sprache {
+  return sprache === "de" ? "en" : "de";
+}

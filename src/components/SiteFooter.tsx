@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { pfad, type Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 import { client } from "@/sanity/lib/client";
 import { siteSettingsQuery } from "@/sanity/lib/queries";
 
@@ -12,11 +14,16 @@ type SiteSettings = {
 /**
  * Fußzeile mit Social-Links und den rechtlich verpflichtenden Seiten (F-702).
  *
+ * AGB und Rückgabe stehen hier, weil der Zahlungsdienstleister sie vor der
+ * Freigabe des Verkaufs prüft und dafür verlangt, dass beide ohne Anmeldung
+ * über die Navigation erreichbar sind.
+ *
  * Die Adressen kommen aus den Website-Einstellungen im CMS — denselben
  * Feldern, aus denen sich auch die Kontaktseite bedient. Nicht gepflegte
  * Einträge werden weggelassen, statt ins Leere zu führen.
  */
-export async function SiteFooter() {
+export async function SiteFooter({ sprache }: { sprache: Sprache }) {
+  const t = texte(sprache);
   const einstellungen = await client.fetch<SiteSettings>(siteSettingsQuery);
 
   const socialLinks = [
@@ -43,7 +50,7 @@ export async function SiteFooter() {
                   className="meta transition-colors hover:text-accent"
                 >
                   {link.label}
-                  <span className="sr-only"> (öffnet in neuem Tab)</span>
+                  <span className="sr-only"> {t.oeffnetNeuerTab}</span>
                 </a>
               </li>
             ))}
@@ -56,18 +63,34 @@ export async function SiteFooter() {
         <ul className="flex flex-wrap gap-x-6 gap-y-2">
           <li>
             <Link
-              href="/impressum"
+              href={pfad("/impressum", sprache)}
               className="meta transition-colors hover:text-accent"
             >
-              Impressum
+              {t.impressum}
             </Link>
           </li>
           <li>
             <Link
-              href="/datenschutz"
+              href={pfad("/datenschutz", sprache)}
               className="meta transition-colors hover:text-accent"
             >
-              Datenschutz
+              {t.datenschutz}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/agb"
+              className="meta transition-colors hover:text-accent"
+            >
+              {t.agb}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/rueckgabe"
+              className="meta transition-colors hover:text-accent"
+            >
+              {t.rueckgabe}
             </Link>
           </li>
           <li>

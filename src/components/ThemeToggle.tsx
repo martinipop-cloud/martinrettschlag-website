@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import type { Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
+
 type Theme = "light" | "dark";
 
 /**
@@ -9,7 +12,8 @@ type Theme = "light" | "dark";
  * Die Wahl wird im Browser gespeichert; ohne gespeicherte Wahl gilt die
  * Systemeinstellung.
  */
-export function ThemeToggle() {
+export function ThemeToggle({ sprache }: { sprache: Sprache }) {
+  const t = texte(sprache);
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
@@ -38,14 +42,10 @@ export function ThemeToggle() {
       onClick={toggle}
       // Vor dem ersten Rendern im Browser ist die Wahl noch unbekannt.
       // Der Platzhaltertext hält die Breite stabil, damit nichts springt (F-808).
-      aria-label={
-        theme === "dark"
-          ? "Zur hellen Darstellung wechseln"
-          : "Zur dunklen Darstellung wechseln"
-      }
-      className="meta cursor-pointer rounded-full border border-line px-3 py-1.5 transition-colors hover:border-accent hover:text-accent"
+      aria-label={theme === "dark" ? t.zuHellLang : t.zuDunkelLang}
+      className="meta cursor-pointer rounded-full border border-line px-2.5 py-1.5 transition-colors hover:border-accent hover:text-accent md:px-3"
     >
-      {theme === null ? "     " : theme === "dark" ? "Hell" : "Dunkel"}
+      {theme === null ? "     " : theme === "dark" ? t.zuHell : t.zuDunkel}
     </button>
   );
 }

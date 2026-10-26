@@ -5,15 +5,21 @@ import { DownloadButton } from "@/components/DownloadButton";
 import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
-import { richText, type Sprache, text } from "@/lib/sprache";
+import { pfad, richText, type Sprache, text } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ToolData } from "@/sanity/lib/types";
 
-/** Wandelt Bytes in eine lesbare Angabe um. */
-function dateigroesse(bytes: number | null): string | null {
+/**
+ * Wandelt Bytes in eine lesbare Angabe um.
+ * Das Dezimaltrennzeichen richtet sich nach der Sprache: im Deutschen
+ * „1,5 MB“, im Englischen „1.5 MB“.
+ */
+function dateigroesse(bytes: number | null, sprache: Sprache): string | null {
   if (!bytes) return null;
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
+  const megabyte = (bytes / (1024 * 1024)).toFixed(1);
+  return `${sprache === "de" ? megabyte.replace(".", ",") : megabyte} MB`;
 }
 
 /**
@@ -31,13 +37,14 @@ export function ToolCard({
   standardPaypalLink: string | null;
   sprache: Sprache;
 }) {
+  const t = texte(sprache);
   const name = text(tool.name, sprache);
   const istKauf = tool.vertrieb === "kauf";
   const spendenLink = tool.paypalUrl ?? standardPaypalLink;
-  const groesse = dateigroesse(tool.datei?.size ?? null);
+  const groesse = dateigroesse(tool.datei?.size ?? null, sprache);
   const preis =
     typeof tool.preis === "number"
-      ? tool.preis.toLocaleString("de-DE", {
+      ? tool.preis.toLocaleString(t.sprachkennung, {
           style: "currency",
           currency: "EUR",
         })
@@ -70,7 +77,7 @@ export function ToolCard({
                 {groesse && ` · ${groesse}`}
                 {typeof tool.downloads === "number" &&
                   tool.downloads > 0 &&
-                  ` · ${tool.downloads.toLocaleString("de-DE")} Downloads`}
+                  ` · ${tool.downloads.toLocaleString(t.sprachkennung)} ${t.downloads}`}
               </p>
             )}
       </div>
@@ -94,34 +101,35 @@ export function ToolCard({
                 rel="noopener noreferrer"
                 className="meta rounded-full border border-accent bg-accent px-7 py-3 !text-accent-contrast transition-opacity hover:opacity-85"
               >
-                Kaufen {preis && `— ${preis}`}
-                <span className="sr-only"> (öffnet in neuem Tab)</span>
+                {t.kaufen} {preis && `— ${preis}`}
+                <span className="sr-only"> {t.oeffnetNeuerTab}</span>
               </a>
             ) : (
               <>
                 <span className="meta rounded-full border border-line px-7 py-3 text-muted">
-                  Verkauf startet in Kürze
+                  {t.verkaufStartet}
                 </span>
                 <Link
-                  href="/contact"
+                  href={pfad("/contact", sprache)}
                   className="meta transition-colors hover:text-accent"
                 >
-                  Bescheid bekommen
+                  {t.bescheidBekommen}
                 </Link>
               </>
             )}
           </div>
 
           <p className="meta mt-4 max-w-lg leading-relaxed">
-            {preis && "Preis inklusive Mehrwertsteuer. "}Kauf und Auslieferung
-            laufen über Paddle, unseren Verkaufspartner — dort siehst du den
-            Endbetrag für dein Land. Es gelten die{" "}
+            {preis && t.preisInklMwst}
+            {t.preisHinweis}{" "}
+            {/* AGB und Rückgaberichtlinie liegen nur auf Deutsch vor; die
+                Beschriftung wechselt, das Ziel bleibt die deutsche Fassung. */}
             <Link href="/agb" className="underline hover:text-accent">
-              AGB
+              {t.agb}
             </Link>{" "}
-            und die{" "}
+            {t.preisHinweisUnd}{" "}
             <Link href="/rueckgabe" className="underline hover:text-accent">
-              Rückgaberichtlinie
+              {t.rueckgaberichtlinie}
             </Link>
             .
           </p>
@@ -136,6 +144,7 @@ export function ToolCard({
                 downloadUrl={downloadUrl}
                 toolName={name}
                 paypalUrl={spendenLink}
+                sprache={sprache}
               />
             )}
 
@@ -146,14 +155,14 @@ export function ToolCard({
                 rel="noopener noreferrer"
                 className="meta rounded-full border border-line px-7 py-3 transition-colors hover:border-accent hover:text-accent"
               >
-                Spenden über PayPal
-                <span className="sr-only"> (öffnet in neuem Tab)</span>
+                {t.spendenPayPal}
+                <span className="sr-only"> {t.oeffnetNeuerTab}</span>
               </a>
             )}
           </div>
 
           <p className="meta mt-4 max-w-lg leading-relaxed">
-            Wenn dir das Tool hilft, freue ich mich über eine Spende.
+            {t.spendenHinweis}
           </p>
         </>
       )}
@@ -162,7 +171,8 @@ export function ToolCard({
         <div className="mt-10 max-w-3xl">
           <YouTubeEmbed
             videoId={videoId}
-            title={`${name} — Demo`}
+            title={`${name} — ${t.demo}`}
+            sprache={sprache}
             posterUrl={
               screenshots[0]
                 ? urlFor(screenshots[0]).width(1200).fit("max").auto("format").url()
@@ -179,7 +189,7 @@ export function ToolCard({
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-paper ring-1 ring-line">
                 <Image
                   src={urlFor(bild).width(600).height(450).fit("crop").auto("format").url()}
-                  alt={bild.alt ?? `${name} — Ansicht ${index + 1}`}
+                  alt={bild.alt ?? `${name} — ${t.ansicht} ${index + 1}`}
                   fill
                   sizes="(min-width: 768px) 30vw, 45vw"
                   className="object-cover"
@@ -195,8 +205,10 @@ export function ToolCard({
       {tool.installation && (
         <details className="group mt-10 border-t border-line pt-6">
           <summary className="meta cursor-pointer list-none transition-colors hover:text-accent">
-            <span className="group-open:hidden">▸ Installationsanleitung anzeigen</span>
-            <span className="hidden group-open:inline">▾ Installationsanleitung ausblenden</span>
+            <span className="group-open:hidden">▸ {t.anleitungAnzeigen}</span>
+            <span className="hidden group-open:inline">
+              ▾ {t.anleitungAusblenden}
+            </span>
           </summary>
           <div className="mt-6 max-w-2xl">
             <RichText value={richText(tool.installation, sprache)} />

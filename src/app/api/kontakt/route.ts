@@ -2,8 +2,13 @@ import { NextResponse } from "next/server";
 
 import { anfrageVersenden, mailVersandEingerichtet } from "@/lib/mailer";
 import { aufraeumen, pruefeRatenbegrenzung } from "@/lib/rateLimit";
+import { istSprache, STANDARDSPRACHE } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 
 export const runtime = "nodejs";
+
+/** Adresse, die bei Störungen als direkter Weg genannt wird. */
+const DIREKTE_ADRESSE = "hello@martinrettschlag.de";
 
 type Eingang = {
   name?: unknown;
@@ -13,6 +18,8 @@ type Eingang = {
   consent?: unknown;
   /** Honeypot: für Menschen unsichtbar, Bots füllen es aus (F-607). */
   website?: unknown;
+  /** Sprache des Formulars, damit die Antwort dazu passt. */
+  sprache?: unknown;
 };
 
 function text(wert: unknown, maxLaenge: number): string | null {
@@ -41,10 +48,13 @@ export async function POST(request: Request) {
     daten = await request.json();
   } catch {
     return NextResponse.json(
-      { fehler: "Anfrage konnte nicht gelesen werden." },
+      { fehler: texte(STANDARDSPRACHE).fehlerNichtGelesen },
       { status: 400 },
     );
   }
+
+  // Unbekannte oder fehlende Angabe fällt auf Deutsch zurück.
+  const t = texte(istSprache(daten.sprache) ? daten.sprache : STANDARDSPRACHE);
 
   // Honeypot: ausgefüllt heißt Bot. Wir antworten bewusst mit "erfolgreich",
   // damit der Absender nicht erkennt, dass er erkannt wurde.
@@ -58,25 +68,19 @@ export async function POST(request: Request) {
   const message = text(daten.message, 5000);
 
   if (!name || !email || !subject || !message) {
-    return NextResponse.json(
-      { fehler: "Bitte alle Felder ausfüllen." },
-      { status: 400 },
-    );
+    return NextResponse.json({ fehler: t.fehlerAlleFelder }, { status: 400 });
   }
 
   if (!istEmail(email)) {
     return NextResponse.json(
-      { fehler: "Bitte eine gültige E-Mail-Adresse angeben." },
+      { fehler: t.fehlerEmailUngueltig },
       { status: 400 },
     );
   }
 
   // Einwilligung ist Pflicht (F-608, R-07).
   if (daten.consent !== true) {
-    return NextResponse.json(
-      { fehler: "Bitte der Datenverarbeitung zustimmen." },
-      { status: 400 },
-    );
+    return NextResponse.json({ fehler: t.fehlerZustimmung }, { status: 400 });
   }
 
   // Ratenbegrenzung pro Absender-Adresse (F-607, N-43).
@@ -88,36 +92,23 @@ export async function POST(request: Request) {
 
   if (!pruefeRatenbegrenzung(herkunft).erlaubt) {
     return NextResponse.json(
-      {
-        fehler:
-          "Es wurden bereits mehrere Anfragen gesendet. Bitte später erneut versuchen.",
-      },
+      { fehler: t.fehlerZuVieleAnfragen },
       { status: 429 },
     );
   }
 
+  const stoerung = `${t.fehlerNichtUebermittelt} ${DIREKTE_ADRESSE}.`;
+
   if (!mailVersandEingerichtet()) {
     console.error("SMTP-Zugangsdaten fehlen – Anfrage konnte nicht zugestellt werden.");
-    return NextResponse.json(
-      {
-        fehler:
-          "Die Anfrage konnte gerade nicht übermittelt werden. Bitte schreib direkt an hello@martinrettschlag.de.",
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({ fehler: stoerung }, { status: 500 });
   }
 
   try {
     await anfrageVersenden({ name, email, subject, message });
   } catch (fehler) {
     console.error("Anfrage konnte nicht versendet werden:", fehler);
-    return NextResponse.json(
-      {
-        fehler:
-          "Die Anfrage konnte gerade nicht übermittelt werden. Bitte schreib direkt an hello@martinrettschlag.de.",
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({ fehler: stoerung }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });

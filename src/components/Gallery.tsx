@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
+import type { Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
+
 type Gemeinsam = {
   alt: string;
   caption?: string;
@@ -32,7 +35,14 @@ export type GalleryItem =
  * läuft ausschließlich nach unten weiter, kein Slider (F-814). Ein Klick
  * öffnet den Eintrag groß.
  */
-export function Gallery({ items }: { items: GalleryItem[] }) {
+export function Gallery({
+  items,
+  sprache,
+}: {
+  items: GalleryItem[];
+  sprache: Sprache;
+}) {
+  const t = texte(sprache);
   const [offenIndex, setOffenIndex] = useState<number | null>(null);
 
   const schliessen = useCallback(() => setOffenIndex(null), []);
@@ -76,7 +86,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
     <>
       <section className="mt-20">
         <h2 className="meta border-b border-line pb-4">
-          {anzahlClips > 0 ? "Screenshots & Clips" : "Screenshots"} —{" "}
+          {anzahlClips > 0 ? t.screenshotsUndClips : t.screenshots} —{" "}
           {items.length}
         </h2>
 
@@ -87,7 +97,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
                 <button
                   type="button"
                   onClick={() => setOffenIndex(index)}
-                  aria-label={`${eintrag.alt} – vergrößern`}
+                  aria-label={`${eintrag.alt} – ${t.vergroessern}`}
                   className="group block w-full cursor-zoom-in overflow-hidden bg-paper-raised ring-1 ring-line"
                 >
                   <div className="relative aspect-[4/3] w-full">
@@ -163,7 +173,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
           )}
 
           <p className="meta mt-2 !text-white/50">
-            {(offenIndex ?? 0) + 1} von {items.length}
+            {(offenIndex ?? 0) + 1} {t.von} {items.length}
           </p>
 
           {items.length > 1 && (
@@ -174,7 +184,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
                   event.stopPropagation();
                   blaettern(-1);
                 }}
-                aria-label="Vorheriger Eintrag"
+                aria-label={t.vorherigerEintrag}
                 className="meta absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer rounded-full border border-white/40 px-4 py-3 !text-white md:left-6"
               >
                 ←
@@ -185,7 +195,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
                   event.stopPropagation();
                   blaettern(1);
                 }}
-                aria-label="Nächster Eintrag"
+                aria-label={t.naechsterEintrag}
                 className="meta absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-full border border-white/40 px-4 py-3 !text-white md:right-6"
               >
                 →
@@ -196,10 +206,10 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
           <button
             type="button"
             onClick={schliessen}
-            aria-label="Großansicht schließen"
+            aria-label={t.grossansichtSchliessen}
             className="meta absolute top-5 right-5 cursor-pointer rounded-full border border-white/40 px-4 py-2 !text-white"
           >
-            Schliessen
+            {t.schliessen}
           </button>
         </div>
       )}

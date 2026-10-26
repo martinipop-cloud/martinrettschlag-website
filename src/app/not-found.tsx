@@ -1,27 +1,28 @@
 import type { Metadata } from "next";
 
 import { NotFoundContent } from "@/components/NotFoundContent";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { RootDocument } from "@/components/RootDocument";
+import { SiteChrome } from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
-  title: "Seite nicht gefunden",
+  title: "Seite nicht gefunden — Martin Rettschlag",
   robots: { index: false, follow: true },
 };
 
 /**
  * Greift bei Adressen, die es auf der ganzen Website nicht gibt.
- * Diese Seite liegt außerhalb des Website-Layouts und bringt Header und
- * Footer deshalb selbst mit.
+ *
+ * Diese Seite liegt außerhalb der beiden Sprachbereiche und bringt deshalb
+ * das HTML-Grundgerüst selbst mit — es gibt hier kein übergeordnetes Layout,
+ * von dem sie es erben könnte. Angezeigt wird Deutsch: Bei einer Adresse, die
+ * es nicht gibt, lässt sich die gewünschte Sprache nicht ablesen.
  */
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="flex-1 pt-16">
+    <RootDocument sprache="de">
+      <SiteChrome sprache="de">
         <NotFoundContent />
-      </main>
-      <SiteFooter />
-    </div>
+      </SiteChrome>
+    </RootDocument>
   );
 }

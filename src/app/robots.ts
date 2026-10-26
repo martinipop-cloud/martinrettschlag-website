@@ -25,7 +25,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/studio", "/danke"],
+      // /danke in beiden Sprachen: Die Seite ergibt nur nach einer Spende
+      // Sinn und gehört nicht in Suchergebnisse.
+      disallow: ["/api/", "/studio", "/danke", "/en/danke"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
   };

@@ -6,6 +6,7 @@ import {
 import Image from "next/image";
 
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
+import type { Sprache } from "@/lib/sprache";
 import { getYouTubeId, youTubeThumbnail } from "@/lib/youtube";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 
@@ -45,7 +46,13 @@ const BILDGROESSEN: Record<
   },
 };
 
-const components: PortableTextComponents = {
+/**
+ * Die Bausteine hängen von der Sprache ab, weil eingebettete Videos einen
+ * Hinweistext tragen („Video starten …“). Deshalb eine Funktion statt einer
+ * festen Tabelle.
+ */
+function bausteine(sprache: Sprache): PortableTextComponents {
+  return {
   block: {
     normal: ({ children }) => (
       <p className="mb-6 leading-relaxed">{children}</p>
@@ -132,6 +139,7 @@ const components: PortableTextComponents = {
             videoId={videoId}
             title={value?.caption ?? "Video"}
             posterUrl={posterUrl}
+            sprache={sprache}
           />
           {value?.caption && (
             <figcaption className="meta mt-3">{value.caption}</figcaption>
@@ -149,11 +157,18 @@ const components: PortableTextComponents = {
       </figure>
     ),
   },
-};
+  };
+}
 
-export function BlogBody({ value }: { value: PortableTextBlock[] | null }) {
+export function BlogBody({
+  value,
+  sprache,
+}: {
+  value: PortableTextBlock[] | null;
+  sprache: Sprache;
+}) {
   if (!value || value.length === 0) return null;
-  return <PortableText value={value} components={components} />;
+  return <PortableText value={value} components={bausteine(sprache)} />;
 }
 
 /**

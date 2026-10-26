@@ -1,5 +1,6 @@
 import { RichText } from "@/components/RichText";
 import { richText, STANDARDSPRACHE, type Sprache } from "@/lib/sprache";
+import { texte } from "@/lib/texte";
 import { client } from "@/sanity/lib/client";
 import { legalPageQuery } from "@/sanity/lib/queries";
 import type { LocalizedRichText } from "@/sanity/lib/types";
@@ -45,11 +46,9 @@ export function LegalPageView({
         </div>
       ) : (
         <div className="mt-12 border border-line bg-paper-raised p-6">
-          <p className="meta">Noch nicht hinterlegt</p>
+          <p className="meta">{texte(sprache).nochNichtHinterlegt}</p>
           <p className="mt-3 leading-relaxed text-muted">
-            Dieser Text muss vor der Veröffentlichung der Website im CMS
-            eingetragen werden — unter „Rechtstexte“. Für eine geschäftlich
-            genutzte Website in Deutschland ist er gesetzlich vorgeschrieben.
+            {texte(sprache).rechtstextFehlt}
           </p>
         </div>
       )}
