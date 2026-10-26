@@ -19,6 +19,13 @@ export type PreviewAsset = {
   mimeType: string | null;
 } | null;
 
+/** Eine Rolle bzw. Leistung, zweisprachig gepflegt. */
+export type RoleRef = {
+  _id: string;
+  name: { de?: string | null; en?: string | null } | null;
+  order: number | null;
+};
+
 /** Daten für eine Projektkachel in den Übersichten. */
 export type ProjectCardData = {
   _id: string;
@@ -26,7 +33,7 @@ export type ProjectCardData = {
   slug: string;
   client: string;
   agency: string | null;
-  roles: string[];
+  roles: RoleRef[];
   previewStill: SanityImage | null;
   preview: PreviewAsset;
 };
@@ -38,7 +45,7 @@ export type ProjectDetail = {
   slug: string;
   client: string;
   agency: string | null;
-  roles: string[] | null;
+  roles: RoleRef[] | null;
   description: PortableTextBlock[] | null;
   /** "youtube" = eingebettetes YouTube-Video, "loop" = eigenes Loop-Video. */
   medium: "youtube" | "loop" | null;

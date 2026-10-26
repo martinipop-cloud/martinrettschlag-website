@@ -56,12 +56,11 @@ export const project = defineType({
       name: "roles",
       title: "Rolle",
       description:
-        "Eigene Aufgaben im Projekt, z. B. Animation, Design, Concept. Mehrere Einträge möglich.",
+        "Eigene Aufgaben im Projekt. Auswahl aus den angelegten Rollen — fehlt eine, legst du sie unter „Rollen / Leistungen“ einmal an und kannst sie danach überall verwenden.",
       type: "array",
       group: "content",
-      of: [defineArrayMember({ type: "string" })],
-      options: { layout: "tags" },
-      validation: (rule) => rule.required().min(1),
+      of: [defineArrayMember({ type: "reference", to: [{ type: "role" }] })],
+      validation: (rule) => rule.required().min(1).unique(),
     }),
     defineField({
       name: "categories",

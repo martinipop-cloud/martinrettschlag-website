@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { STANDARDSPRACHE, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import type { ProjectCardData } from "@/sanity/lib/types";
 
@@ -27,6 +28,11 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
 
   const bildKlassen =
     "h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]";
+
+  // Rollen in der aktuellen Sprache; fehlt die Übersetzung, greift Deutsch.
+  const rollen = (project.roles ?? [])
+    .map((rolle) => text(rolle.name, STANDARDSPRACHE))
+    .filter((name): name is string => Boolean(name));
 
   return (
     <article>
@@ -70,9 +76,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
         <h3 className="display mt-4 text-2xl transition-colors group-hover:text-accent">
           {project.title}
         </h3>
-        {project.roles.length > 0 && (
-          <p className="meta mt-1">{project.roles.join(", ")}</p>
-        )}
+        {rollen.length > 0 && <p className="meta mt-1">{rollen.join(", ")}</p>}
         <p className="meta mt-1">
           {[project.client, project.agency].filter(Boolean).join(" – ")}
         </p>

@@ -12,7 +12,7 @@ const cardFields = `
   "slug": slug.current,
   client,
   agency,
-  "roles": coalesce(roles, []),
+  "roles": coalesce(roles[]->{"_id": _id, "name": name, order}, []),
   previewStill,
   "preview": previewAnimation.asset->{url, extension, mimeType}
 `;
@@ -55,7 +55,7 @@ export const projectBySlugQuery = defineQuery(`
     "slug": slug.current,
     client,
     agency,
-    roles,
+    "roles": coalesce(roles[]->{"_id": _id, "name": name, order}, []),
     description,
     medium,
     youtubeUrl,

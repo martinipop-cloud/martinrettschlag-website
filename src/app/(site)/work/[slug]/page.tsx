@@ -7,6 +7,7 @@ import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
 import { client } from "@/sanity/lib/client";
+import { STANDARDSPRACHE, text } from "@/lib/sprache";
 import { hatBild, urlFor } from "@/sanity/lib/image";
 import {
   projectBySlugQuery,
@@ -16,10 +17,21 @@ import {
 import type {
   ProjectDetail,
   ProjectOrderEntry,
+  RoleRef,
   SanityImage,
 } from "@/sanity/lib/types";
 
 export const revalidate = 60;
+
+/**
+ * Rollennamen in der aktuellen Sprache. Fehlt eine Übersetzung,
+ * greift die deutsche Fassung.
+ */
+function rollenNamen(rollen: RoleRef[] | null | undefined): string[] {
+  return (rollen ?? [])
+    .map((rolle) => text(rolle.name, STANDARDSPRACHE))
+    .filter((name): name is string => Boolean(name));
+}
 
 /** Ein Eintrag der Projektgalerie – entweder ein Bild oder ein Clip. */
 type GallerySource = SanityImage & {
@@ -47,7 +59,7 @@ export async function generateMetadata({
 
   if (!projekt) return { title: "Projekt nicht gefunden" };
 
-  const beschreibung = [projekt.client, projekt.roles?.join(", ")]
+  const beschreibung = [projekt.client, rollenNamen(projekt.roles).join(", ")]
     .filter(Boolean)
     .join(" — ");
 
@@ -185,10 +197,12 @@ export default async function ProjectDetailPage({
             <dd className="mt-2 text-lg">{projekt.agency}</dd>
           </div>
         )}
-        {projekt.roles && projekt.roles.length > 0 && (
+        {rollenNamen(projekt.roles).length > 0 && (
           <div>
             <dt className="meta">Rolle</dt>
-            <dd className="mt-2 text-lg">{projekt.roles.join(", ")}</dd>
+            <dd className="mt-2 text-lg">
+              {rollenNamen(projekt.roles).join(", ")}
+            </dd>
           </div>
         )}
         {projekt.categories.length > 0 && (

@@ -9,6 +9,12 @@ import {
 } from "./blocks";
 import { category } from "./category";
 import { legalPage } from "./legalPage";
+import {
+  localizedRichText,
+  localizedString,
+  localizedText,
+} from "./localized";
+import { role } from "./role";
 import { post } from "./post";
 import { project } from "./project";
 import { references } from "./references";
@@ -23,9 +29,14 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     contentImage,
     galleryVideo,
     youtubeEmbed,
+    // Zweisprachigkeit
+    localizedString,
+    localizedText,
+    localizedRichText,
     // Inhalte
     project,
     category,
+    role,
     tool,
     post,
     legalPage,
