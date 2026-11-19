@@ -32,15 +32,13 @@ export function getYouTubeId(url: string | null | undefined): string | null {
 }
 
 /**
- * Adresse des YouTube-Vorschaubilds. „hqdefault“ gibt es für jedes Video
- * (480 × 360, 16:9-Inhalt mit Balken – object-cover schneidet sie weg).
- *
- * Wichtig: Nur über next/image verwenden. Dann holt der eigene Server das
- * Bild bei YouTube ab und liefert es von der eigenen Domain aus – der
- * Browser der Besucher hat keinen Kontakt zu Google (R-06).
+ * Adresse des YouTube-Vorschaubilds über die eigene Schnittstelle
+ * (/api/youtube-vorschau). Der Server holt „hqdefault“ bei YouTube ab
+ * (480 × 360, 16:9-Inhalt mit Balken – object-cover schneidet sie weg),
+ * der Browser der Besucher hat keinen Kontakt zu Google (R-06).
  */
 export function youTubeThumbnail(videoId: string): string {
-  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+  return `/api/youtube-vorschau/${videoId}`;
 }
 
 function clean(value: string | undefined): string | null {

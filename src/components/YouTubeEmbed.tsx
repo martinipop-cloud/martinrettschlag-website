@@ -10,8 +10,9 @@ import { texte } from "@/lib/texte";
  * Datenschutzfreundliche YouTube-Einbettung (F-309, R-06).
  *
  * Vor dem Klick hat der Browser keinen Kontakt zu Google: Das Vorschaubild
- * kommt aus dem CMS oder – bei YouTube-Thumbnails – über next/image vom
- * eigenen Server, der es bei YouTube abholt. Erst nach dem Klick des Nutzers wird der Player über
+ * kommt aus dem CMS oder – bei YouTube-Thumbnails – über die eigene
+ * Schnittstelle /api/youtube-vorschau, die es bei YouTube abholt. Erst nach
+ * dem Klick des Nutzers wird der Player über
  * youtube-nocookie.com nachgeladen. Das erspart einen Consent-Zwang für das
  * bloße Betrachten der Projektseite und beschleunigt den Seitenaufbau (N-04).
  */
@@ -49,8 +50,8 @@ export function YouTubeEmbed({
       className="group relative block aspect-video w-full cursor-pointer overflow-hidden bg-paper-raised ring-1 ring-line"
     >
       {posterUrl && (
-        // Über next/image, damit auch YouTube-Thumbnails vom eigenen
-        // Server ausgeliefert werden statt direkt von Google.
+        // CMS-Bilder rechnet das Sanity-CDN passend, YouTube-Thumbnails
+        // kommen über die eigene Schnittstelle (siehe youTubeThumbnail).
         <Image
           src={posterUrl}
           alt=""
