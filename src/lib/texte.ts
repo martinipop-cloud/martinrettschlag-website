@@ -50,6 +50,7 @@ const woerterbuch = {
     rolle: "Rolle",
     kategorie: "Kategorie",
     kategorien: "Kategorien",
+    credits: "Credits",
     weitereProjekte: "Weitere Projekte",
     vorheriges: "Vorheriges",
     naechstes: "Nächstes",
@@ -140,32 +141,17 @@ const woerterbuch = {
     direkt: "Direkt",
     standort: "Standort",
     social: "Social",
-    name: "Name",
-    email: "E-Mail",
-    betreff: "Betreff",
-    nachricht: "Nachricht",
-    einwilligung:
-      "Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. Weitere Hinweise in der",
-    datenschutzerklaerung: "Datenschutzerklärung",
-    nachrichtSenden: "Nachricht senden",
-    wirdGesendet: "Wird gesendet …",
-    pflichtfeld: "* Pflichtfeld",
-    dankeNachricht: "Danke für deine Nachricht.",
-    dankeNachrichtText: "Die Anfrage ist angekommen. Ich melde mich so bald wie möglich.",
-    verbindungFehlgeschlagen: "Die Verbindung ist fehlgeschlagen. Bitte schreib direkt an",
-    fehlerAllgemein: "Es ist ein Fehler aufgetreten.",
+    kontaktHinweis:
+      "Schreib mir einfach. Ein Formular gibt es hier nicht — eine Mail ist schneller und du hast sie selbst im Postausgang.",
     kontaktBeschreibung: "Anfragen und Kontakt zu Martin Rettschlag.",
-    honeypotLabel: "Website (bitte frei lassen)",
 
-    // Rückmeldungen der Formular-Schnittstelle
-    fehlerNichtGelesen: "Anfrage konnte nicht gelesen werden.",
-    fehlerAlleFelder: "Bitte alle Felder ausfüllen.",
+    // Formularbausteine. Das Kontaktformular ist mit A-11 entfallen; diese
+    // Beschriftungen bleiben für die Newsletter-Anmeldung (Kapitel 4.9).
+    name: "Vollständiger Name",
+    email: "E-Mail",
+    datenschutzerklaerung: "Datenschutzerklärung",
+    honeypotLabel: "Website (bitte frei lassen)",
     fehlerEmailUngueltig: "Bitte eine gültige E-Mail-Adresse angeben.",
-    fehlerZustimmung: "Bitte der Datenverarbeitung zustimmen.",
-    fehlerZuVieleAnfragen:
-      "Es wurden bereits mehrere Anfragen gesendet. Bitte später erneut versuchen.",
-    fehlerNichtUebermittelt:
-      "Die Anfrage konnte gerade nicht übermittelt werden. Bitte schreib direkt an",
 
     // Fehlerseite
     fehler404: "Fehler 404",
@@ -224,6 +210,7 @@ const woerterbuch = {
     rolle: "Role",
     kategorie: "Category",
     kategorien: "Categories",
+    credits: "Credits",
     weitereProjekte: "More projects",
     vorheriges: "Previous",
     naechstes: "Next",
@@ -303,31 +290,15 @@ const woerterbuch = {
     direkt: "Direct",
     standort: "Location",
     social: "Social",
-    name: "Name",
-    email: "Email",
-    betreff: "Subject",
-    nachricht: "Message",
-    einwilligung:
-      "I agree that my data will be stored for processing my enquiry. Further information in the",
-    datenschutzerklaerung: "privacy policy",
-    nachrichtSenden: "Send message",
-    wirdGesendet: "Sending …",
-    pflichtfeld: "* Required field",
-    dankeNachricht: "Thank you for your message.",
-    dankeNachrichtText: "Your enquiry has arrived. I will get back to you as soon as possible.",
-    verbindungFehlgeschlagen: "The connection failed. Please write directly to",
-    fehlerAllgemein: "An error occurred.",
+    kontaktHinweis:
+      "Just write to me. There is no form here — an email is quicker, and you keep a copy in your own sent folder.",
     kontaktBeschreibung: "Enquiries and contact details for Martin Rettschlag.",
-    honeypotLabel: "Website (please leave empty)",
 
-    fehlerNichtGelesen: "The request could not be read.",
-    fehlerAlleFelder: "Please fill in all fields.",
+    name: "Full name",
+    email: "Email",
+    datenschutzerklaerung: "privacy policy",
+    honeypotLabel: "Website (please leave empty)",
     fehlerEmailUngueltig: "Please enter a valid email address.",
-    fehlerZustimmung: "Please agree to the processing of your data.",
-    fehlerZuVieleAnfragen:
-      "Several enquiries have already been sent. Please try again later.",
-    fehlerNichtUebermittelt:
-      "The enquiry could not be delivered right now. Please write directly to",
 
     fehler404: "Error 404",
     nichts: "Nothing ",

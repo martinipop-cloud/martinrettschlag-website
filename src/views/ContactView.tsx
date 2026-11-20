@@ -1,4 +1,3 @@
-import { ContactForm } from "@/components/ContactForm";
 import { type Sprache, text } from "@/lib/sprache";
 import { texte } from "@/lib/texte";
 import { client } from "@/sanity/lib/client";
@@ -14,8 +13,11 @@ type SiteSettings = {
 } | null;
 
 /**
- * Kontaktseite (Kapitel 4.6): Formular, Mailadresse, Standort und Social-Links.
- * Bewusst ohne Portraitfoto und ohne Verfügbarkeitsstatus (F-612).
+ * Kontaktseite (Kapitel 4.6): Mailadresse, Standort und Social-Links.
+ *
+ * Seit A-11 ohne Formular. Die Adresse ist damit der einzige Weg von dieser
+ * Seite aus und steht deshalb groß und als erstes. Bewusst weiterhin ohne
+ * Portraitfoto und ohne Verfügbarkeitsstatus (F-612).
  */
 export async function ContactView({ sprache }: { sprache: Sprache }) {
   const t = texte(sprache);
@@ -38,48 +40,47 @@ export async function ContactView({ sprache }: { sprache: Sprache }) {
         {t.kontaktTitel}
       </h1>
 
-      <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-[1fr_auto] lg:gap-24">
-        <div>
-          <ContactForm kontaktEmail={email} sprache={sprache} />
-        </div>
+      <div className="mt-16 border-t border-line pt-10">
+        <h2 className="meta">{t.direkt}</h2>
+        {/* Die Adresse darf umbrechen: Auf schmalen Bildschirmen passt sie
+            sonst nicht in eine Zeile und schöbe die Seite seitwärts. */}
+        <a
+          href={`mailto:${email}`}
+          className="display mt-4 block text-[clamp(1.5rem,5vw,3.5rem)] break-words text-accent underline-offset-8 hover:underline"
+        >
+          {email}
+        </a>
+        <p className="mt-6 max-w-xl text-lg">{t.kontaktHinweis}</p>
+      </div>
 
-        <aside className="lg:w-72">
-          <h2 className="meta">{t.direkt}</h2>
-          <a
-            href={`mailto:${email}`}
-            className="mt-3 block text-lg text-accent underline-offset-4 hover:underline"
-          >
-            {email}
-          </a>
+      <div className="mt-16 grid grid-cols-1 gap-12 border-t border-line pt-10 sm:grid-cols-2">
+        {ort && (
+          <div>
+            <h2 className="meta">{t.standort}</h2>
+            <p className="mt-3 text-lg">{ort}</p>
+          </div>
+        )}
 
-          {ort && (
-            <>
-              <h2 className="meta mt-10">{t.standort}</h2>
-              <p className="mt-3 text-lg">{ort}</p>
-            </>
-          )}
-
-          {socialLinks.length > 0 && (
-            <>
-              <h2 className="meta mt-10">{t.social}</h2>
-              <ul className="mt-3 flex flex-col gap-2">
-                {socialLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lg transition-colors hover:text-accent"
-                    >
-                      {link.label}
-                      <span className="sr-only"> {t.oeffnetNeuerTab}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </aside>
+        {socialLinks.length > 0 && (
+          <div>
+            <h2 className="meta">{t.social}</h2>
+            <ul className="mt-3 flex flex-col gap-2">
+              {socialLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg transition-colors hover:text-accent"
+                  >
+                    {link.label}
+                    <span className="sr-only"> {t.oeffnetNeuerTab}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );
