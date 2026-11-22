@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { istGueltig } from "@/lib/newsletter";
 import { client } from "@/sanity/lib/client";
 import { hatSchreibrechte, writeClient } from "@/sanity/lib/writeClient";
 
@@ -37,14 +38,34 @@ async function zaehlerErhoehen(id: string) {
 /**
  * Leitet zum Download weiter und zählt ihn anonym mit.
  *
- * Es werden ausschließlich Downloads gezählt – keine IP-Adressen, keine
+ * Diese Adresse ist nicht frei aufrufbar: Sie braucht eine Unterschrift, die
+ * nur die Bestätigungsseite ausstellt (F-404n). Ohne diese Hürde wäre die
+ * Anmeldung wirkungslos — die Namen der Tools stehen ja öffentlich auf der
+ * Software-Seite, man könnte die Adresse also einfach zusammensetzen.
+ *
+ * Gezählt werden ausschließlich Downloads – keine IP-Adressen, keine
  * Kennungen, nichts Personenbezogenes (F-409).
  */
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
+  const abfrage = new URL(request.url).searchParams;
+
+  if (
+    !istGueltig(
+      "download",
+      slug,
+      abfrage.get("bis"),
+      abfrage.get("sig") ?? undefined,
+    )
+  ) {
+    return new NextResponse(
+      "Dieser Download-Link ist abgelaufen oder unvollständig. Fordere ihn auf der Software-Seite neu an.",
+      { status: 403, headers: { "content-type": "text/plain; charset=utf-8" } },
+    );
+  }
 
   const tool = await client.fetch<ToolDatei>(
     `*[_type == "tool" && slug.current == $slug][0]{

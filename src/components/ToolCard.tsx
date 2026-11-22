@@ -1,7 +1,7 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
 
-import { DownloadButton } from "@/components/DownloadButton";
+import { DownloadGate } from "@/components/DownloadGate";
 import { RichText } from "@/components/RichText";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getYouTubeId } from "@/lib/youtube";
@@ -17,16 +17,20 @@ import type { ToolData } from "@/sanity/lib/types";
  */
 function dateigroesse(bytes: number | null, sprache: Sprache): string | null {
   if (!bytes) return null;
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  // Mindestens „1 KB“: Eine sehr kleine Datei würde sonst als „0 KB“
+  // erscheinen, was nach einem Fehler aussieht.
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
   const megabyte = (bytes / (1024 * 1024)).toFixed(1);
   return `${sprache === "de" ? megabyte.replace(".", ",") : megabyte} MB`;
 }
 
 /**
- * Karte für ein einzelnes Tool (F-403 bis F-409).
+ * Karte für ein einzelnes Tool (F-403 bis F-408, F-411).
  *
- * Der Download ist bedingungslos frei – keine Abfrage von Daten, keine
- * Kopplung an die Spende. Die Spende ist ein freiwilliger Hinweis daneben.
+ * Kostenlose Tools kosten nichts und sind an keine Zahlung gekoppelt — die
+ * Spende bleibt ein freiwilliger Hinweis daneben. Der Download-Link kommt
+ * aber über die E-Mail-Anmeldung (F-404n), damit neue Fassungen ihre
+ * Nutzer auch erreichen.
  */
 export function ToolCard({
   tool,
@@ -53,9 +57,9 @@ export function ToolCard({
   // Bildfelder ohne hochgeladene Datei aussortieren, statt abzustürzen.
   const screenshots = (tool.screenshots ?? []).filter(hatBild);
 
-  // Der Download läuft über die eigene Adresse, damit er mitgezählt werden
-  // kann (F-410). Von dort geht es weiter zur Datei.
-  const downloadUrl = tool.datei ? `/api/download/${tool.slug}` : null;
+  // Ob überhaupt eine Datei hinterlegt ist. Der Weg dorthin führt über die
+  // Anmeldung und eine unterschriebene Adresse — siehe DownloadGate.
+  const hatDatei = Boolean(tool.datei);
 
   return (
     <article
@@ -135,15 +139,14 @@ export function ToolCard({
           </p>
         </>
       ) : (
-        /* Kostenlos: Download frei zugänglich, Spende freiwillig daneben
-           (F-404, F-405) */
+        /* Kostenlos: Link per E-Mail (F-404n), Spende freiwillig daneben
+           (F-405) */
         <>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            {downloadUrl && (
-              <DownloadButton
-                downloadUrl={downloadUrl}
+            {hatDatei && (
+              <DownloadGate
+                toolSlug={tool.slug}
                 toolName={name}
-                paypalUrl={spendenLink}
                 sprache={sprache}
               />
             )}

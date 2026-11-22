@@ -79,7 +79,7 @@ const woerterbuch = {
     softwareTitel: "Tools & ",
     softwareTitelAkzent: "Scripts",
     softwareEinleitung:
-      "Kleine Helfer aus der täglichen Arbeit. Alle Downloads sind kostenlos und ohne Anmeldung nutzbar.",
+      "Kleine Helfer aus der täglichen Arbeit. Alle Tools sind kostenlos — den Download-Link schicke ich dir per E-Mail.",
     keineTools: "Hier erscheinen demnächst die ersten Tools.",
     herunterladen: "Herunterladen",
     spendenPayPal: "Spenden über PayPal",
@@ -87,30 +87,27 @@ const woerterbuch = {
     kaufen: "Kaufen",
     preisInklMwst: "Preis inklusive Mehrwertsteuer. ",
     preisHinweis:
-      "Kauf und Auslieferung laufen über Paddle, unseren Verkaufspartner — dort siehst du den Endbetrag für dein Land. Es gelten die",
+      "Kauf und Auslieferung laufen über Gumroad, unseren Verkaufspartner — dort siehst du den Endbetrag für dein Land. Es gelten die",
     preisHinweisUnd: "und die",
     verkaufStartet: "Verkauf startet in Kürze",
     bescheidBekommen: "Bescheid bekommen",
     anleitungAnzeigen: "Installationsanleitung anzeigen",
     anleitungAusblenden: "Installationsanleitung ausblenden",
     downloads: "Downloads",
-    downloadLaeuft: "Download läuft",
     dankeKopf: "Danke",
     dankeKopfAkzent: "schön",
-    downloadLaeuftText: "wird gerade geladen.",
     mehrToolsText:
       "Wenn du willst, dass noch mehr solcher Tools entstehen: Genau dafür sind Spenden da. Sie kaufen mir die Zeit frei, neue zu bauen.",
-    vielleichtSpaeter: "Vielleicht später",
     ansicht: "Ansicht",
     demo: "Demo",
     softwareBeschreibung:
-      "Kostenlose Plugins und Scripts für Motion Designer — Download frei, Spende freiwillig.",
+      "Kostenlose Plugins und Scripts für Motion Designer — Link per E-Mail, Spende freiwillig.",
     zurueckZuDenTools: "Zurück zu den Tools",
     arbeitenAnsehen: "Arbeiten ansehen",
     dankeSeiteAbsatz1:
       "Deine Spende ist angekommen — das freut mich sehr und hilft dabei, die Tools weiterzuentwickeln und neue zu bauen.",
     dankeSeiteAbsatz2:
-      "Du musst nichts weiter tun. Alle Downloads waren und bleiben frei zugänglich.",
+      "Du musst nichts weiter tun. Die Tools bleiben für alle kostenlos.",
 
     // Blog
     blogTitel: "Ick mag ",
@@ -152,6 +149,54 @@ const woerterbuch = {
     datenschutzerklaerung: "Datenschutzerklärung",
     honeypotLabel: "Website (bitte frei lassen)",
     fehlerEmailUngueltig: "Bitte eine gültige E-Mail-Adresse angeben.",
+
+    // Newsletter und Download-Anforderung (Kapitel 4.9)
+    newsletterDownloadKopf: "Download anfordern",
+    newsletterDownloadText:
+      "Trag dich ein, dann liegt der Download einen Klick entfernt in deinem Postfach — und du erfährst, wenn es eine neue Fassung gibt.",
+    newsletterBlockKopf: "Neue Tools, neue ",
+    newsletterBlockKopfAkzent: "Fassungen",
+    newsletterBlockText:
+      "Eine E-Mail, wenn ein neues Tool fertig ist oder ein bestehendes ein Update bekommt. Sonst nichts.",
+    newsletterEinverstanden:
+      "Ich möchte diese E-Mails bekommen. Abmelden kann ich mich jederzeit mit einem Klick.",
+    newsletterDatenschutzHinweis: "Was mit deinen Daten passiert, steht in der",
+    newsletterAnmelden: "Anmelden",
+    newsletterAnmeldenDownload: "Link anfordern",
+    newsletterLaeuft: "Einen Moment …",
+    newsletterPostfachKopf: "Schau in dein Postfach",
+    newsletterPostfachText:
+      "Die E-Mail ist unterwegs. Der Knopf darin bestätigt die Anmeldung und führt dich direkt zum Download.",
+    newsletterPostfachTextOhneTool:
+      "Die E-Mail ist unterwegs. Der Knopf darin bestätigt die Anmeldung. Ohne diesen Klick speichere ich nichts.",
+    newsletterSpamHinweis: "Nichts angekommen? Dann sieh bitte im Spam-Ordner nach.",
+    newsletterFehlerName: "Bitte den vollständigen Namen angeben.",
+    newsletterFehlerEinverstanden:
+      "Ohne dieses Einverständnis darf ich dir keine E-Mail schicken.",
+    newsletterFehlerAllgemein:
+      "Das hat gerade nicht geklappt. Bitte später noch einmal versuchen.",
+    newsletterZuVieleVersuche:
+      "Das waren mehrere Versuche in kurzer Zeit. Bitte warte einen Moment.",
+    warumAnmeldung: "Warum die Anmeldung?",
+    warumAnmeldungText:
+      "So kann ich dir Bescheid geben, wenn es eine neue Fassung gibt — bei Skripten für After Effects ist das der halbe Nutzen. Deine Adresse bekommt niemand sonst zu sehen.",
+
+    // Bestätigung und Abmeldung
+    bestaetigtKopf: "Alles ",
+    bestaetigtKopfAkzent: "klar",
+    bestaetigtText: "Deine Anmeldung ist bestätigt — du stehst auf der Liste.",
+    bestaetigtDownloadKopf: "Dein Download",
+    downloadStarten: "Download starten",
+    bestaetigtLinkAbgelaufen:
+      "Dieser Download-Link ist abgelaufen. Fordere ihn auf der Tool-Seite einfach neu an; deine Anmeldung bleibt davon unberührt.",
+    bestaetigtBeschreibung: "Bestätigung der Newsletter-Anmeldung.",
+    abgemeldetKopf: "Ab",
+    abgemeldetKopfAkzent: "gemeldet",
+    abgemeldetText:
+      "Deine Adresse ist aus der Liste entfernt. Du bekommst keine weiteren E-Mails von mir.",
+    abgemeldetZusatz:
+      "Versehentlich abgemeldet? Auf der Tool-Seite kannst du dich jederzeit wieder eintragen.",
+    abgemeldetBeschreibung: "Abmeldung vom Newsletter.",
 
     // Fehlerseite
     fehler404: "Fehler 404",
@@ -235,7 +280,7 @@ const woerterbuch = {
     softwareTitel: "Tools & ",
     softwareTitelAkzent: "Scripts",
     softwareEinleitung:
-      "Small helpers from my daily work. All downloads are free and need no sign-up.",
+      "Small helpers from my daily work. Every tool is free — I send you the download link by email.",
     keineTools: "The first tools will appear here soon.",
     herunterladen: "Download",
     spendenPayPal: "Donate via PayPal",
@@ -243,30 +288,27 @@ const woerterbuch = {
     kaufen: "Buy",
     preisInklMwst: "Price includes VAT. ",
     preisHinweis:
-      "Purchase and delivery are handled by Paddle, our sales partner — you will see the final amount for your country there. The following apply: the",
+      "Purchase and delivery are handled by Gumroad, our sales partner — you will see the final amount for your country there. The following apply: the",
     preisHinweisUnd: "and the",
     verkaufStartet: "On sale shortly",
     bescheidBekommen: "Get notified",
     anleitungAnzeigen: "Show installation guide",
     anleitungAusblenden: "Hide installation guide",
     downloads: "downloads",
-    downloadLaeuft: "Download running",
     dankeKopf: "Thank ",
     dankeKopfAkzent: "you",
-    downloadLaeuftText: "is downloading.",
     mehrToolsText:
       "If you want more tools like this to exist: that is exactly what donations are for. They buy me the time to build them.",
-    vielleichtSpaeter: "Maybe later",
     ansicht: "View",
     demo: "Demo",
     softwareBeschreibung:
-      "Free plugins and scripts for motion designers — downloads are free, donations voluntary.",
+      "Free plugins and scripts for motion designers — link by email, donations voluntary.",
     zurueckZuDenTools: "Back to the tools",
     arbeitenAnsehen: "See the work",
     dankeSeiteAbsatz1:
       "Your donation has arrived — thank you, it really helps me keep the tools going and build new ones.",
     dankeSeiteAbsatz2:
-      "There is nothing else you need to do. All downloads were and remain freely available.",
+      "There is nothing else you need to do. The tools stay free for everyone.",
 
     blogTitel: "What I ",
     blogTitelAkzent: "Like",
@@ -299,6 +341,51 @@ const woerterbuch = {
     datenschutzerklaerung: "privacy policy",
     honeypotLabel: "Website (please leave empty)",
     fehlerEmailUngueltig: "Please enter a valid email address.",
+
+    newsletterDownloadKopf: "Request the download",
+    newsletterDownloadText:
+      "Sign up and the download sits one click away in your inbox — and you will hear about new versions.",
+    newsletterBlockKopf: "New tools, new ",
+    newsletterBlockKopfAkzent: "versions",
+    newsletterBlockText:
+      "One email when a new tool is ready or an existing one gets an update. Nothing else.",
+    newsletterEinverstanden:
+      "Yes, send me these emails. I can unsubscribe with one click at any time.",
+    newsletterDatenschutzHinweis: "What happens to your data is explained in the",
+    newsletterAnmelden: "Sign up",
+    newsletterAnmeldenDownload: "Send me the link",
+    newsletterLaeuft: "One moment …",
+    newsletterPostfachKopf: "Check your inbox",
+    newsletterPostfachText:
+      "The email is on its way. The button inside confirms your sign-up and takes you straight to the download.",
+    newsletterPostfachTextOhneTool:
+      "The email is on its way. The button inside confirms your sign-up. Without that click nothing is stored.",
+    newsletterSpamHinweis: "Nothing there? Please check your spam folder.",
+    newsletterFehlerName: "Please enter your full name.",
+    newsletterFehlerEinverstanden:
+      "Without this consent I am not allowed to email you.",
+    newsletterFehlerAllgemein: "That did not work. Please try again later.",
+    newsletterZuVieleVersuche:
+      "That was several attempts in a short time. Please wait a moment.",
+    warumAnmeldung: "Why sign up?",
+    warumAnmeldungText:
+      "It lets me tell you when a new version is out — with After Effects scripts that is half the value. Nobody else gets to see your address.",
+
+    bestaetigtKopf: "All ",
+    bestaetigtKopfAkzent: "set",
+    bestaetigtText: "Your sign-up is confirmed — you are on the list.",
+    bestaetigtDownloadKopf: "Your download",
+    downloadStarten: "Start download",
+    bestaetigtLinkAbgelaufen:
+      "This download link has expired. Just request it again on the tool page; your sign-up is not affected.",
+    bestaetigtBeschreibung: "Newsletter sign-up confirmation.",
+    abgemeldetKopf: "Unsub",
+    abgemeldetKopfAkzent: "scribed",
+    abgemeldetText:
+      "Your address has been removed from the list. You will not receive any further emails from me.",
+    abgemeldetZusatz:
+      "Unsubscribed by mistake? You can sign up again on the tool page at any time.",
+    abgemeldetBeschreibung: "Newsletter unsubscribe.",
 
     fehler404: "Error 404",
     nichts: "Nothing ",
