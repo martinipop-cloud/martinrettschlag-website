@@ -3,6 +3,10 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 /**
  * Software / Script zum kostenlosen Download (Kapitel 5.3 des Lastenhefts).
  * Der Download ist immer frei; die Spende bleibt freiwillig (F-404, F-409).
+ *
+ * Name, Kurzbeschreibung, Kompatibilität und Anleitung sind zweisprachig
+ * wie bei den Projekten. Fehlt die englische Fassung, zeigt die englische
+ * Seite den deutschen Text.
  */
 export const tool = defineType({
   name: "tool",
@@ -17,9 +21,13 @@ export const tool = defineType({
     defineField({
       name: "name",
       title: "Name",
-      type: "string",
+      type: "localizedString",
       group: "content",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const de = (wert as { de?: string } | undefined)?.de?.trim();
+          return de ? true : "Der deutsche Name wird benötigt.";
+        }),
     }),
     defineField({
       name: "slug",
@@ -27,7 +35,12 @@ export const tool = defineType({
       description: "Wird für die Verlinkung innerhalb der Seite verwendet.",
       type: "slug",
       group: "content",
-      options: { source: "name", maxLength: 96 },
+      options: {
+        // Aus dem deutschen Namen, weil Deutsch die Grundsprache ist.
+        source: (doc: Record<string, unknown>) =>
+          (doc.name as { de?: string } | undefined)?.de ?? "",
+        maxLength: 96,
+      },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -50,29 +63,44 @@ export const tool = defineType({
     defineField({
       name: "shortDescription",
       title: "Kurzbeschreibung",
-      description: "Ein bis zwei Sätze. Erscheint direkt auf der Karte.",
-      type: "text",
-      rows: 3,
+      description: "Ein bis zwei Sätze, höchstens 300 Zeichen. Erscheint direkt auf der Karte.",
+      type: "localizedText",
       group: "content",
-      validation: (rule) => rule.required().max(300),
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const w = wert as { de?: string; en?: string } | undefined;
+          if (!w?.de?.trim()) return "Die deutsche Kurzbeschreibung wird benötigt.";
+          if ((w.de?.length ?? 0) > 300 || (w.en?.length ?? 0) > 300) {
+            return "Höchstens 300 Zeichen je Sprache.";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "compatibility",
       title: "Kompatibilität",
       description:
         "Womit läuft das Tool? Zum Beispiel: „After Effects ab CC 2022, Windows & macOS“.",
-      type: "string",
+      type: "localizedString",
       group: "content",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const de = (wert as { de?: string } | undefined)?.de?.trim();
+          return de ? true : "Die deutsche Angabe zur Kompatibilität wird benötigt.";
+        }),
     }),
     defineField({
       name: "installation",
       title: "Installationsanleitung",
       description:
         "Schritt-für-Schritt-Anleitung. Wird auf der Karte zum Aufklappen angeboten.",
-      type: "richText",
+      type: "localizedRichText",
       group: "content",
-      validation: (rule) => rule.required(),
+      validation: (rule) =>
+        rule.custom((wert) => {
+          const de = (wert as { de?: unknown[] } | undefined)?.de;
+          return de && de.length > 0 ? true : "Die deutsche Anleitung wird benötigt.";
+        }),
     }),
 
     defineField({
@@ -206,6 +234,16 @@ export const tool = defineType({
     },
   ],
   preview: {
-    select: { title: "name", subtitle: "compatibility" },
+    select: {
+      nameDe: "name.de",
+      nameEn: "name.en",
+      kompatibilitaet: "compatibility.de",
+    },
+    prepare: ({ nameDe, nameEn, kompatibilitaet }) => ({
+      title: nameDe ?? nameEn ?? "(ohne Name)",
+      subtitle: [kompatibilitaet, nameEn ? null : "EN fehlt"]
+        .filter(Boolean)
+        .join(" · "),
+    }),
   },
 });
