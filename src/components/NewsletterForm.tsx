@@ -120,7 +120,10 @@ export function NewsletterForm({
             required
             maxLength={80}
             autoFocus={autoFokus}
-            className="mt-2 w-full border border-line bg-paper px-4 py-3 text-base focus:border-accent focus:outline-none"
+            // bg-paper-raised: Das Feldinnere ist eine Spur heller als der
+            // Grund dahinter, damit man ohne Hinsehen erkennt, wo geschrieben
+            // wird. Im dunklen Modus dreht sich das Verhältnis mit um.
+            className="mt-2 w-full border border-line bg-paper-raised px-4 py-3 text-base focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -136,7 +139,7 @@ export function NewsletterForm({
             autoComplete="email"
             required
             maxLength={200}
-            className="mt-2 w-full border border-line bg-paper px-4 py-3 text-base focus:border-accent focus:outline-none"
+            className="mt-2 w-full border border-line bg-paper-raised px-4 py-3 text-base focus:border-accent focus:outline-none"
           />
         </div>
 
