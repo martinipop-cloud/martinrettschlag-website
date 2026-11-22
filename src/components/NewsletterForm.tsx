@@ -61,7 +61,7 @@ export function NewsletterForm({
           einverstanden,
           sprache,
           tool,
-          website: String(formular.get("website") ?? ""),
+          kontrollfeld: String(formular.get("kontrollfeld") ?? ""),
         }),
       });
 
@@ -142,15 +142,25 @@ export function NewsletterForm({
 
         {/* Unsichtbares Feld gegen automatische Ausfüller (F-907). Nicht mit
             display:none versteckt — manche Programme überspringen genau das.
-            Für Vorleseprogramme und die Tastatur ist es unerreichbar. */}
+            Für Vorleseprogramme und die Tastatur ist es unerreichbar.
+
+            Name und Beschriftung dürfen keinem Feld ähneln, das Browser oder
+            Passwort-Manager kennen. Hieß es früher „website", hat Chrome es
+            mit der eigenen Website-Adresse gefüllt — trotz autoComplete="off"
+            — und jede echte Anmeldung wurde als Roboter verworfen. Die
+            data-Merkmale schließen 1Password, LastPass und Bitwarden aus. */}
         <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-          <label htmlFor={`${kennung}-website`}>{t.honeypotLabel}</label>
+          <label htmlFor={`${kennung}-kontrollfeld`}>{t.honeypotLabel}</label>
           <input
-            id={`${kennung}-website`}
-            name="website"
+            id={`${kennung}-kontrollfeld`}
+            name="kontrollfeld"
             type="text"
             tabIndex={-1}
             autoComplete="off"
+            data-1p-ignore="true"
+            data-lpignore="true"
+            data-bwignore="true"
+            data-form-type="other"
           />
         </div>
 

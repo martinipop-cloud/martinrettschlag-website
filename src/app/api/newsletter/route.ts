@@ -35,6 +35,8 @@ type Eingabe = {
   tool?: unknown;
   sprache?: unknown;
   einverstanden?: unknown;
+  kontrollfeld?: unknown;
+  /** Früherer Name des Kontrollfelds — noch geladene alte Seiten schicken ihn. */
   website?: unknown;
 };
 
@@ -126,7 +128,18 @@ export async function POST(request: Request) {
 
   // Unsichtbares Feld: Nur automatische Ausfüller tragen hier etwas ein.
   // Sie bekommen eine freundliche Antwort und sonst nichts (F-907).
-  if (typeof eingabe.website === "string" && eingabe.website.trim() !== "") {
+  //
+  // Die Antwort ist absichtlich dieselbe wie bei Erfolg — für den Besucher
+  // also nicht von einer echten Anmeldung zu unterscheiden. Deshalb steht es
+  // im Log: Als das Feld noch „website" hieß, hat Chrome es selbst gefüllt,
+  // und echte Anmeldungen verschwanden spurlos.
+  const kontrolle = [eingabe.kontrollfeld, eingabe.website].find(
+    (wert) => typeof wert === "string" && wert.trim() !== "",
+  );
+  if (kontrolle !== undefined) {
+    console.warn(
+      `Newsletter: Kontrollfeld ausgefüllt (${String(kontrolle).length} Zeichen) — als Roboter verworfen, nichts an Brevo gesendet.`,
+    );
     return NextResponse.json({ ok: true });
   }
 

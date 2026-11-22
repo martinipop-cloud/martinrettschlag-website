@@ -153,7 +153,7 @@ const woerterbuch = {
     name: "Vollständiger Name",
     email: "E-Mail",
     datenschutzerklaerung: "Datenschutzerklärung",
-    honeypotLabel: "Website (bitte frei lassen)",
+    honeypotLabel: "Nicht ausfüllen",
     fehlerEmailUngueltig: "Bitte eine gültige E-Mail-Adresse angeben.",
 
     // Newsletter und Download-Anforderung (Kapitel 4.9)
@@ -351,7 +351,7 @@ const woerterbuch = {
     name: "Full name",
     email: "Email",
     datenschutzerklaerung: "privacy policy",
-    honeypotLabel: "Website (please leave empty)",
+    honeypotLabel: "Do not fill in",
     fehlerEmailUngueltig: "Please enter a valid email address.",
 
     newsletterDownloadKopf: "Request the download",
