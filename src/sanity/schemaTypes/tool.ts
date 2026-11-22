@@ -79,18 +79,38 @@ export const tool = defineType({
       name: "downloadFile",
       title: "Download-Datei",
       description:
-        "Die eigentliche Datei, z. B. .jsx oder .zip. Richtwert: bis etwa 20 MB. Nur bei kostenlosen Tools nötig — verkaufte Tools werden von der Verkaufsplattform ausgeliefert.",
+        "Die eigentliche Datei, z. B. .jsx oder .zip. Richtwert: bis etwa 20 MB. Nicht nötig, wenn unten ein GitHub-Repository eingetragen ist — dann dient sie nur als Rückfall, falls GitHub nicht erreichbar ist. Verkaufte Tools werden von der Verkaufsplattform ausgeliefert.",
       type: "file",
       group: "media",
       hidden: ({ document }) => document?.vertrieb === "kauf",
       validation: (rule) =>
         rule.custom((wert, kontext) => {
-          const vertrieb = (kontext.document as { vertrieb?: string } | undefined)
-            ?.vertrieb;
-          if (vertrieb !== "kauf" && !wert) {
-            return "Für ein kostenloses Tool wird eine Datei benötigt.";
+          const dokument = kontext.document as
+            | { vertrieb?: string; githubRepo?: string }
+            | undefined;
+          if (dokument?.vertrieb !== "kauf" && !wert && !dokument?.githubRepo) {
+            return "Für ein kostenloses Tool wird eine Datei oder ein GitHub-Repository benötigt.";
           }
           return true;
+        }),
+    }),
+    defineField({
+      name: "githubRepo",
+      title: "GitHub-Repository",
+      description:
+        "Form besitzer/name, z. B. martinipop-cloud/deep-duplicate-comp (eine kopierte GitHub-Adresse geht auch). Ist es gesetzt, kommt der Download automatisch aus dem neuesten Release, und Versionsnummer und Beta-Kennzeichen erscheinen von selbst. Als Beta gilt ein Release, das bei GitHub als „pre-release“ markiert ist. Bei verkauften Tools wird nur die Version angezeigt, die Datei nie ausgeliefert.",
+      type: "string",
+      group: "media",
+      validation: (rule) =>
+        rule.custom((wert) => {
+          if (!wert) return true;
+          const s = String(wert)
+            .trim()
+            .replace(/^https?:\/\/(www\.)?github\.com\//i, "")
+            .replace(/^github\.com\//i, "");
+          return /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+/.test(s)
+            ? true
+            : "Bitte als besitzer/name angeben, z. B. martinipop-cloud/deep-duplicate-comp.";
         }),
     }),
     defineField({

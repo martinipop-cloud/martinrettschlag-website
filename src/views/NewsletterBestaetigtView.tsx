@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ladeReleases } from "@/lib/github";
+
 import {
   DOWNLOAD_GUELTIG_MS,
   istGueltig,
@@ -14,6 +16,7 @@ import type { LocalizedString } from "@/sanity/lib/types";
 type FreiesTool = {
   slug: string;
   name: LocalizedString;
+  githubRepo: string | null;
   dateiname: string | null;
   endung: string | null;
 } | null;
@@ -50,9 +53,10 @@ export async function NewsletterBestaetigtView({
   const [toolDaten, einstellungen] = await Promise.all([
     gueltig && tool
       ? client.fetch<FreiesTool>(
-          `*[_type == "tool" && slug.current == $slug && vertrieb != "kauf" && defined(downloadFile.asset)][0]{
+          `*[_type == "tool" && slug.current == $slug && vertrieb != "kauf" && (defined(downloadFile.asset) || defined(githubRepo))][0]{
             "slug": slug.current,
             name,
+            githubRepo,
             "dateiname": downloadFile.asset->originalFilename,
             "endung": downloadFile.asset->extension
           }`,
@@ -62,11 +66,21 @@ export async function NewsletterBestaetigtView({
     client.fetch<SiteSettings>(siteSettingsQuery),
   ]);
 
+  const releases = toolDaten?.githubRepo
+    ? await ladeReleases(toolDaten.githubRepo)
+    : null;
+  const haupt = releases?.stabil ?? releases?.beta ?? null;
+  const betaDaneben = releases?.stabil ? releases.beta : null;
+  const endung = haupt ? haupt.datei.endung : (toolDaten?.endung ?? null);
+
   const abfrage = toolDaten
     ? unterschriebeneAbfrage("download", toolDaten.slug, DOWNLOAD_GUELTIG_MS)
     : "";
   const downloadUrl =
     toolDaten && abfrage ? `/api/download/${toolDaten.slug}?${abfrage}` : null;
+  // Die Beta braucht keine eigene Unterschrift: Beide Fassungen liegen
+  // hinter derselben Bestätigung (siehe /api/download).
+  const betaUrl = downloadUrl && betaDaneben ? `${downloadUrl}&kanal=beta` : null;
   const toolName = toolDaten ? text(toolDaten.name, sprache) : null;
 
   // Ein Tool war gewünscht, die Unterschrift stimmt aber nicht mehr.
@@ -87,6 +101,16 @@ export async function NewsletterBestaetigtView({
         <div className="mt-14 border-t border-line pt-10">
           <h2 className="meta">{t.bestaetigtDownloadKopf}</h2>
           <p className="display mt-3 text-3xl md:text-4xl">{toolName}</p>
+          {haupt && (
+            <p className="meta mt-2 flex flex-wrap items-center gap-2 text-muted">
+              {haupt.beta && (
+                <span className="inline-block rounded-full border border-accent px-3 py-1 text-[0.7rem] leading-none !text-accent">
+                  {t.beta}
+                </span>
+              )}
+              {t.version} {haupt.version}
+            </p>
+          )}
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <a
               href={downloadUrl}
@@ -97,10 +121,23 @@ export async function NewsletterBestaetigtView({
             >
               {t.downloadStarten}
             </a>
-            {toolDaten?.endung && (
-              <span className="meta text-muted">.{toolDaten.endung}</span>
-            )}
+            {endung && <span className="meta text-muted">.{endung}</span>}
           </div>
+
+          {betaUrl && betaDaneben && (
+            <div className="mt-8">
+              <a
+                href={betaUrl}
+                rel="nofollow"
+                className="meta inline-flex items-center gap-3 rounded-full border border-accent px-7 py-3 !text-accent transition-colors hover:bg-accent hover:!text-accent-contrast"
+              >
+                {t.betaLaden} · {betaDaneben.version}
+              </a>
+              <p className="meta mt-3 max-w-lg leading-relaxed text-muted">
+                {t.betaHinweis}
+              </p>
+            </div>
+          )}
         </div>
       )}
 

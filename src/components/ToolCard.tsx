@@ -8,6 +8,7 @@ import { getYouTubeId } from "@/lib/youtube";
 import { pfad, richText, type Sprache, text } from "@/lib/sprache";
 import { texte } from "@/lib/texte";
 import { hatBild, urlFor } from "@/sanity/lib/image";
+import type { ToolReleases } from "@/lib/githubReleases";
 import type { ToolData } from "@/sanity/lib/types";
 
 /**
@@ -34,10 +35,13 @@ function dateigroesse(bytes: number | null, sprache: Sprache): string | null {
  */
 export function ToolCard({
   tool,
+  releases = null,
   standardPaypalLink,
   sprache,
 }: {
   tool: ToolData;
+  /** Von GitHub, falls das Tool dort liegt. `null` = kein Repo oder nicht erreichbar. */
+  releases?: ToolReleases | null;
   standardPaypalLink: string | null;
   sprache: Sprache;
 }) {
@@ -45,7 +49,21 @@ export function ToolCard({
   const name = text(tool.name, sprache);
   const istKauf = tool.vertrieb === "kauf";
   const spendenLink = tool.paypalUrl ?? standardPaypalLink;
-  const groesse = dateigroesse(tool.datei?.size ?? null, sprache);
+  // Was angeboten wird: die stabile Fassung, sonst die Beta. Daneben eine
+  // neuere Beta, falls es beides gibt. Ohne GitHub die Datei aus Sanity.
+  const haupt = releases?.stabil ?? releases?.beta ?? null;
+  const betaDaneben = releases?.stabil ? releases.beta : null;
+  const endung = haupt ? haupt.datei.endung : (tool.datei?.extension ?? null);
+  const groesse = dateigroesse(
+    haupt ? haupt.datei.size : (tool.datei?.size ?? null),
+    sprache,
+  );
+  const datum = (iso: string) =>
+    new Date(iso).toLocaleDateString(t.sprachkennung, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
   const preis =
     typeof tool.preis === "number"
       ? tool.preis.toLocaleString(t.sprachkennung, {
@@ -59,7 +77,7 @@ export function ToolCard({
 
   // Ob überhaupt eine Datei hinterlegt ist. Der Weg dorthin führt über die
   // Anmeldung und eine unterschriebene Adresse — siehe DownloadGate.
-  const hatDatei = Boolean(tool.datei);
+  const hatDatei = Boolean(haupt) || Boolean(tool.datei);
 
   return (
     <article
@@ -68,16 +86,34 @@ export function ToolCard({
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="display text-3xl md:text-4xl">{name}</h2>
+          <h2 className="display flex flex-wrap items-center gap-x-4 gap-y-2 text-3xl md:text-4xl">
+            {name}
+            {/* Gibt es nur eine Beta, trägt die ganze Karte das Kennzeichen. */}
+            {haupt?.beta && <BetaKennzeichen text={t.beta} />}
+          </h2>
           <p className="meta mt-2">{text(tool.compatibility, sprache)}</p>
+          {haupt && (
+            <p className="meta mt-1 text-muted">
+              {t.version} {haupt.version} · {datum(haupt.datum)}
+            </p>
+          )}
+          {betaDaneben && (
+            <p className="meta mt-2 flex flex-wrap items-center gap-2">
+              <BetaKennzeichen text={t.beta} />
+              <span>
+                {betaDaneben.version}
+                {!istKauf && ` ${t.betaVerfuegbar}`}
+              </span>
+            </p>
+          )}
         </div>
         {istKauf
           ? preis && (
               <p className="display text-2xl whitespace-nowrap">{preis}</p>
             )
-          : tool.datei?.extension && (
+          : endung && (
               <p className="meta">
-                .{tool.datei.extension}
+                .{endung}
                 {groesse && ` · ${groesse}`}
                 {typeof tool.downloads === "number" &&
                   tool.downloads > 0 &&
@@ -219,5 +255,17 @@ export function ToolCard({
         </details>
       )}
     </article>
+  );
+}
+
+/**
+ * Kleines Schild „Beta". Umrandet in der Akzentfarbe statt gefüllt, damit es
+ * nicht mit dem Kaufen- oder Download-Knopf verwechselt wird.
+ */
+function BetaKennzeichen({ text }: { text: string }) {
+  return (
+    <span className="meta inline-block rounded-full border border-accent px-3 py-1 align-middle text-[0.7rem] leading-none !text-accent">
+      {text}
+    </span>
   );
 }

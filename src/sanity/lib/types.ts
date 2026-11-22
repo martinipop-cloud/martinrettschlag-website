@@ -85,6 +85,8 @@ export type ToolData = {
   kaufUrl: string | null;
   paypalUrl: string | null;
   downloads: number | null;
+  /** „besitzer/name" — Download und Version kommen dann aus den GitHub-Releases. */
+  githubRepo: string | null;
   screenshots: (SanityImage & {
     dimensions?: { width: number; height: number } | null;
   })[] | null;

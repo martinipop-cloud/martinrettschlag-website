@@ -94,6 +94,12 @@ const woerterbuch = {
     anleitungAnzeigen: "Installationsanleitung anzeigen",
     anleitungAusblenden: "Installationsanleitung ausblenden",
     downloads: "Downloads",
+    version: "Version",
+    beta: "Beta",
+    betaVerfuegbar: "verfügbar — nach der Anmeldung wählbar",
+    betaLaden: "Beta laden",
+    betaHinweis:
+      "Die Beta ist neuer, aber noch nicht ausgiebig getestet. Wenn dir etwas auffällt, freue ich mich über eine Nachricht.",
     dankeKopf: "Danke",
     dankeKopfAkzent: "schön",
     mehrToolsText:
@@ -295,6 +301,12 @@ const woerterbuch = {
     anleitungAnzeigen: "Show installation guide",
     anleitungAusblenden: "Hide installation guide",
     downloads: "downloads",
+    version: "Version",
+    beta: "Beta",
+    betaVerfuegbar: "available — selectable after signing up",
+    betaLaden: "Get the beta",
+    betaHinweis:
+      "The beta is newer but not yet thoroughly tested. If you notice anything, I would love to hear about it.",
     dankeKopf: "Thank ",
     dankeKopfAkzent: "you",
     mehrToolsText:

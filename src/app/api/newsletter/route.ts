@@ -174,7 +174,7 @@ export async function POST(request: Request) {
   let tool: FreiesTool = null;
   if (slugWunsch) {
     tool = await client.fetch<FreiesTool>(
-      `*[_type == "tool" && slug.current == $slug && vertrieb != "kauf" && defined(downloadFile.asset)][0]{
+      `*[_type == "tool" && slug.current == $slug && vertrieb != "kauf" && (defined(downloadFile.asset) || defined(githubRepo))][0]{
         "slug": slug.current, name
       }`,
       { slug: slugWunsch },

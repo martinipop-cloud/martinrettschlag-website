@@ -105,6 +105,7 @@ export const toolsQuery = defineQuery(`
     kaufUrl,
     paypalUrl,
     downloads,
+    githubRepo,
     screenshots[]{
       ...,
       "dimensions": asset->metadata.dimensions

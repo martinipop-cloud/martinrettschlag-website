@@ -1,6 +1,7 @@
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { RichText } from "@/components/RichText";
 import { ToolCard } from "@/components/ToolCard";
+import { ladeReleases } from "@/lib/github";
 import { richText, type Sprache } from "@/lib/sprache";
 import { texte } from "@/lib/texte";
 import { client } from "@/sanity/lib/client";
@@ -23,6 +24,14 @@ export async function SoftwareView({ sprache }: { sprache: Sprache }) {
     client.fetch<ToolData[]>(toolsQuery),
     client.fetch<SiteSettings>(siteSettingsQuery),
   ]);
+
+  // Version und Beta je Tool von GitHub. Die Liste wird fünf Minuten
+  // zwischengespeichert, ein neues Release erscheint also von selbst.
+  const releases = await Promise.all(
+    tools.map((tool) =>
+      tool.githubRepo ? ladeReleases(tool.githubRepo) : Promise.resolve(null),
+    ),
+  );
 
   const einleitung = richText(einstellungen?.softwareIntro ?? null, sprache);
 
@@ -55,10 +64,11 @@ export async function SoftwareView({ sprache }: { sprache: Sprache }) {
         <p className="mt-16 text-muted">{t.keineTools}</p>
       ) : (
         <ul className="mt-16 flex flex-col gap-10">
-          {tools.map((tool) => (
+          {tools.map((tool, index) => (
             <li key={tool._id}>
               <ToolCard
                 tool={tool}
+                releases={releases[index]}
                 standardPaypalLink={einstellungen?.defaultPaypalUrl ?? null}
                 sprache={sprache}
               />
