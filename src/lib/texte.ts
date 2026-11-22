@@ -114,6 +114,14 @@ const woerterbuch = {
       "Deine Spende ist angekommen — das freut mich sehr und hilft dabei, die Tools weiterzuentwickeln und neue zu bauen.",
     dankeSeiteAbsatz2:
       "Du musst nichts weiter tun. Die Tools bleiben für alle kostenlos.",
+    // Danke-Seite nach dem Download
+    downloadLaeuftVor: "Dein Download von ",
+    downloadLaeuftNach: " läuft.",
+    downloadStartetNicht: "Startet er nicht von selbst?",
+    downloadNochmal: "Noch einmal laden",
+    spendenAufrufKopf: "Hilft dir das Tool?",
+    spendenAufrufText:
+      "Dann freue ich mich über eine Spende. Sie ist freiwillig — und sie verschafft mir die Zeit, dieses Tool zu pflegen und weitere zu bauen.",
 
     // Blog
     blogTitel: "Ick mag ",
@@ -321,6 +329,14 @@ const woerterbuch = {
       "Your donation has arrived — thank you, it really helps me keep the tools going and build new ones.",
     dankeSeiteAbsatz2:
       "There is nothing else you need to do. The tools stay free for everyone.",
+    // Danke-Seite nach dem Download
+    downloadLaeuftVor: "Your download of ",
+    downloadLaeuftNach: " has started.",
+    downloadStartetNicht: "Did it not start?",
+    downloadNochmal: "Download again",
+    spendenAufrufKopf: "Does the tool help you?",
+    spendenAufrufText:
+      "Then a donation would make my day. It is entirely voluntary — and it buys me the time to keep this tool up to date and build new ones.",
 
     blogTitel: "What I ",
     blogTitelAkzent: "Like",

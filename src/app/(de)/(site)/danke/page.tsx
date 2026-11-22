@@ -4,13 +4,40 @@ import { DankeView } from "@/views/DankeView";
 
 export const metadata: Metadata = {
   title: "Danke",
-  // Die Seite ergibt nur nach einer Spende Sinn und gehört nicht in
-  // Suchergebnisse.
+  // Die Seite ergibt nur nach einer Spende oder einem Download Sinn und
+  // gehört nicht in Suchergebnisse.
   robots: { index: false, follow: true },
 };
 
-export const revalidate = 60;
+// Hängt an der Abfrage in der Adresse (?nach=download&…) und darf nicht
+// zwischengespeichert werden — sonst bekäme der nächste Besucher den
+// Download des vorigen.
+export const dynamic = "force-dynamic";
 
-export default function DankePage() {
-  return <DankeView sprache="de" />;
+function einzel(wert: string | string[] | undefined): string | undefined {
+  return Array.isArray(wert) ? wert[0] : wert;
+}
+
+export default async function DankePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const abfrage = await searchParams;
+  const nachDownload = einzel(abfrage.nach) === "download";
+  return (
+    <DankeView
+      sprache="de"
+      download={
+        nachDownload
+          ? {
+              tool: einzel(abfrage.tool),
+              bis: einzel(abfrage.bis),
+              sig: einzel(abfrage.sig),
+              kanal: einzel(abfrage.kanal),
+            }
+          : undefined
+      }
+    />
+  );
 }

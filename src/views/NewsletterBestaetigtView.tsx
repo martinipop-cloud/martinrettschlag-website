@@ -76,8 +76,14 @@ export async function NewsletterBestaetigtView({
   const abfrage = toolDaten
     ? unterschriebeneAbfrage("download", toolDaten.slug, DOWNLOAD_GUELTIG_MS)
     : "";
+  // Der Knopf führt zur Danke-Seite, und die startet den Download selbst.
+  // Direkt zur Datei und danach erst weiterleiten geht nicht zuverlässig:
+  // Manche Browser brechen einen Download ab, wenn die Seite gleich wechselt.
+  // Die Abfrage ist dieselbe Unterschrift, die /api/download verlangt.
   const downloadUrl =
-    toolDaten && abfrage ? `/api/download/${toolDaten.slug}?${abfrage}` : null;
+    toolDaten && abfrage
+      ? `${pfad("/danke", sprache)}?nach=download&${abfrage}`
+      : null;
   // Die Beta braucht keine eigene Unterschrift: Beide Fassungen liegen
   // hinter derselben Bestätigung (siehe /api/download).
   const betaUrl = downloadUrl && betaDaneben ? `${downloadUrl}&kanal=beta` : null;
