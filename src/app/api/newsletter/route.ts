@@ -240,6 +240,7 @@ export async function POST(request: Request) {
       const mail = downloadMail(sprache, text(tool.name, sprache) || tool.slug, ziel);
       const gesendet = await brevo("POST", "/smtp/email", {
         sender: { name: "Martin Rettschlag", email: absender() },
+        replyTo: { email: antwortAdresse(), name: "Martin Rettschlag" },
         to: [{ email, name }],
         ...mail,
       });
@@ -285,13 +286,24 @@ export async function POST(request: Request) {
 /**
  * Absender der direkten Download-Mail.
  *
- * Solange kein Absender auf der eigenen Domain bei Brevo bestätigt ist, muss
- * die Mail von der dort hinterlegten Adresse kommen — eine unbestätigte
- * lehnt Brevo ab. Die Anmeldebestätigung selbst trägt ihren Absender in der
- * Vorlage und braucht diesen Wert nicht.
+ * Muss bei Brevo bestätigt sein, sonst lehnt Brevo die Mail ab. Seit dem
+ * 22.11.2026 ist es die Adresse auf der eigenen, bei Brevo authentifizierten
+ * Domain (N-51). Eine Gmail-Adresse taugt hier nicht: Brevo ersetzt sie
+ * durch eine eigene mit kryptischer Kennung, und viele Postfächer sortieren
+ * sie aus. Die Anmeldebestätigung trägt ihren Absender in der Vorlage.
  */
 function absender(): string {
   return (
-    process.env.BREVO_SENDER_EMAIL?.trim() || "martinrettschlag@gmail.com"
+    process.env.BREVO_SENDER_EMAIL?.trim() || "newsletter@martinrettschlag.de"
+  );
+}
+
+/**
+ * Wohin Antworten auf die Download-Mail gehen — dieselbe Adresse wie in den
+ * Bestätigungsvorlagen bei Brevo.
+ */
+function antwortAdresse(): string {
+  return (
+    process.env.BREVO_REPLY_TO?.trim() || "support@martinrettschlag.de"
   );
 }
